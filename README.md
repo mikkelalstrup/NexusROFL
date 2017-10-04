@@ -35,4 +35,4 @@
 ![ER-Diagram](ER-Diagram.png)
 
 ## Klassediagram
-[Link til klassediagram](https://www.lucidchart.com/invitations/accept/18653f58-4b82-457b-af53-9f69b213a74f)
+[Link til klassediagram](https://www.lucidchart.com/documents/view/9230b5ab-aea0-4a3e-a65d-e626e94e7a80)
