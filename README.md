@@ -30,3 +30,8 @@
 * K6: En bruger skal kunne oprette et opslag.
 * K7: En bruger skal kunne oprette en begivenhed.
 * K8: En bruger skal kunne finde informationer om den valgte bruger eller begivenhed
+
+## ER-Diagram
+![ER-Diagram](ER%20Diagram.png)
+
+## Klassediagram
