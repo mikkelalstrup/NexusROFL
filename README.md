@@ -32,6 +32,6 @@
 * K8: En bruger skal kunne finde informationer om den valgte bruger eller begivenhed
 
 ## ER-Diagram
-![ER-Diagram](ER%20Diagram.png)
+![ER-Diagram](ER-Diagram.png)
 
 ## Klassediagram
