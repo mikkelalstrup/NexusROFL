@@ -30,11 +30,12 @@ En bruger skal kunne oprette et opslag.
 
 En bruger skal kunne oprette en begivenhed.
 
-En bruger skal kunne finde informationer om den valgte bruger eller begivenhed
+En bruger skal kunne finde informationer om den valgte bruger eller begivenhed.
 
 
 
 Forslag til endelig kravspec - klient:
+
 
 K1: En gæst skal kunne oprette sig som bruger.
 
