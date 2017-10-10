@@ -39,10 +39,10 @@ CREATE TABLE IF NOT EXISTS `cafe_nexus`.`events` (
   `event_id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(60) NOT NULL,
   `description` LONGTEXT NULL,
-  `created` TIMESTAMP GENERATED ALWAYS AS (CURRENT_TIMESTAMP) VIRTUAL,
   `start` DATETIME NOT NULL,
   `end` DATETIME NOT NULL,
   `owner_id` INT NOT NULL,
+  `created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`event_id`),
   INDEX `fk_events_users1_idx` (`owner_id` ASC),
   CONSTRAINT `fk_events_users1`
@@ -59,7 +59,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `cafe_nexus`.`posts` (
   `post_id` INT NOT NULL AUTO_INCREMENT,
   `content` LONGTEXT NOT NULL,
-  `created` TIMESTAMP GENERATED ALWAYS AS (CURRENT_TIMESTAMP) VIRTUAL,
+  `created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `event_id` INT NULL,
   `parent_id` INT NULL,
   `user_id` INT NOT NULL,
