@@ -1,8 +1,8 @@
 Denne guide skal sikre, at vi alle sammen arbejde i vores egen branch og kun poster til vores master, når koden er 'godkendt'.
 
-Link til en 21 minutters Youtube der foreviser: https://www.youtube.com/watch?v=yXT1ElMEkW8
+Link til en 21 minutters Youtube: https://www.youtube.com/watch?v=yXT1ElMEkW8
 
-Commit
+
   1. Åben terminal/gitbash
   2. 'cd' hen til den projektet på din computer
   
