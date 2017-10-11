@@ -26,7 +26,7 @@
 * K6: En bruger skal kunne se oplysninger om brugere,begivenheder og opslag.
 
 ## ER-Diagram
-![ER-Diagram](Project%20Mangement/ER%20Diagram.png)
+![ER-Diagram](Project%20Mangement/Diagrams/ER-Diagram.png)
 
 ## Klassediagram
 [Link til klassediagram](https://www.lucidchart.com/documents/view/9230b5ab-aea0-4a3e-a65d-e626e94e7a80)
