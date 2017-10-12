@@ -9,6 +9,7 @@ public class RootEndpoint {
 
     @GET
     public Response defaultGetMethod(){
+
         return Response.status(200).type("text/plain").entity("Velkommen til Cafe Nexus").build();
     }
 }
