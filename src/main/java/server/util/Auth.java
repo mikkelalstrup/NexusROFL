@@ -56,9 +56,9 @@ public class Auth {
      * https://github.com/Distribuerede-Systemer-2017/
      *          secure-dis/blob/master/src/Utility/Digester.java
      *
-     * Performing MD5 hashing of string
-     * @param str input
-     * @return MD5 hash of string
+     * Performing SHA-256 hashing of string
+     * @param str The string that will be hashed
+     * @return SHA-256 hash of the inputted string
      */
     private static String performHashing(String str){
         digester.update(str.getBytes());
