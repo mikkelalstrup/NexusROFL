@@ -11,8 +11,8 @@ public class Auth {
     private static MessageDigest digester;
 
     static {
-
-        // Creates am instance of the MessageDigest with SHA-256 hashing algorithm
+        // Creates an instance of MessageDigest with SHA-256 hashing algorithm
+        // This object is used to perform the hashing of passwords
         try {
             digester = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
@@ -23,7 +23,7 @@ public class Auth {
 
     /**
      * @param password The password that should be hashed
-     * @param salt The user salt
+     * @param salt The user specific salt
      * @return A SHA-256 hashed value of the password and salt combination
      */
     public static String hashPassword(String password, String salt) {
@@ -32,21 +32,24 @@ public class Auth {
 
     /**
      * Salt generation algorithm, generates a randomized 6 character salt
-     *      based on the password parameter.
+     *      based on the seed string.
      *
-     * @param password The password that will be used as the base for the salt
+     * @param seed The string that will be used as the seed for the salt
      * @return A 6 character salt
      */
-    public static String generateSalt(String password) {
+    public static String generateSalt(String seed) {
 
-        String hashedString = performHashing(password);
+        // Hash the seed string to generate a 64 char string.
+        String hashedString = performHashing(seed);
 
+        // Generate a random number between 1-56, that will be the starting index of the seed.
         int startIndex = (int) (56*Math.random());
 
+        // Return a 6 char substring of the hashed seed string,
+        // starting at the index defined by the random number.
         return hashedString.substring(startIndex, startIndex+6);
 
     }
-
 
     /**
      * Code taken from:
