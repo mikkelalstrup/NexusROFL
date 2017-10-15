@@ -20,7 +20,7 @@ USE `cafe_nexus` ;
 CREATE TABLE IF NOT EXISTS `cafe_nexus`.`users` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
   `salt` VARCHAR(6) NOT NULL,
-  `password` VARCHAR(16) NOT NULL,
+  `password` VARCHAR(64) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `first_name` VARCHAR(255) NOT NULL,
   `last_name` VARCHAR(60) NOT NULL,

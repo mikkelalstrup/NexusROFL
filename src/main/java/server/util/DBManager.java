@@ -26,13 +26,8 @@ public class DBManager {
                     System.getenv("DATABASE_USER"),
                     System.getenv("DATABASE_PASSWORD"));
         } catch (SQLException e) {
+            System.out.print(e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
