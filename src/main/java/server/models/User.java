@@ -36,6 +36,32 @@ public class User {
         this.posts = new ArrayList<Post>();
     }
 
+    public User(String password, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.description = description;
+        this.gender = gender;
+        this.major = major;
+        this.semester = semester;
+    }
+
+    //Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    //Getters
+
     public int getId() {
         return id;
     }

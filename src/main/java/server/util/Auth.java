@@ -1,7 +1,5 @@
 package server.util;
 
-import sun.plugin2.message.Message;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,10 +21,22 @@ public class Auth {
 
     }
 
+    /**
+     * @param password The password that should be hashed
+     * @param salt The user salt
+     * @return A SHA-256 hashed value of the password and salt combination
+     */
     public static String hashPassword(String password, String salt) {
         return (performHashing(password + salt));
     }
 
+    /**
+     * Salt generation algorithm, generates a randomized 6 character salt
+     *      based on the password parameter.
+     *
+     * @param password The password that will be used as the base for the salt
+     * @return A 6 character salt
+     */
     public static String generateSalt(String password) {
 
         String hashedString = performHashing(password);
