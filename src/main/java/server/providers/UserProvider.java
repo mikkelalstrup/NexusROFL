@@ -47,7 +47,7 @@ public class UserProvider {
         createUserStatement.setString(8, user.getMajor());
         createUserStatement.setInt(9, user.getSemester());
 
-        //Excecute update
+        //Execute update
         int rowsUpdated = createUserStatement.executeUpdate();
 
         // Check if 1 row have been updated

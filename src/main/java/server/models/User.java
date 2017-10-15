@@ -36,8 +36,9 @@ public class User {
         this.posts = new ArrayList<Post>();
     }
 
-    public User(String password, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
-        this.password = password;
+    // Use this constructor when assembling data for new user creation
+    public User(String plaintext_password, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
+        this.password = plaintext_password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -45,6 +46,9 @@ public class User {
         this.gender = gender;
         this.major = major;
         this.semester = semester;
+
+        this.events = new ArrayList<Event>();
+        this.posts = new ArrayList<Post>();
     }
 
     //Setters
