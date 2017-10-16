@@ -18,6 +18,7 @@ public class DBManager {
     // Establishes the conncetion to the database
     static {
         try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
                     "jdbc:mysql://"
                             + System.getenv("DATABASE_HOST") + ":"
@@ -27,6 +28,12 @@ public class DBManager {
                     System.getenv("DATABASE_PASSWORD"));
         } catch (SQLException e) {
             System.out.print(e.getMessage());
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
