@@ -16,25 +16,16 @@ public class RootEndpoint {
     @GET
     public Response defaultGetMethod(){
 
-        String test = null;
+        User user = new User("Password", "Filip", "Andersen", "fian16ab@student.cbs.dk", "MY password is password", 'M', "Ha(it)", 3);
+
+        UserProvider userProvider = new UserProvider();
+
         try {
-            test = DBManager.getConnection().getCatalog();
+            userProvider.createUser(user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        User user1 = new User("test", "test","test","test",'m',"c","test",1);
-
-
-
-
-        UserProvider userss = new UserProvider();
-        try {
-            userss.createUser(user1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return Response.status(200).type("text/plain").entity(test).build();
+        return Response.status(200).type("text/plain").entity("User created").build();
     }
 }
