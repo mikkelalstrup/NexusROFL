@@ -28,6 +28,10 @@ public class Event {
         this.participants = new ArrayList<User>();
         this.posts = new ArrayList<Post>();
     }
+    // This constructor is used to ONLY get the id of the event
+    public Event(int id) {
+        this.id = id;
+    }
 
     public Event(int id) {
         this.id = id;

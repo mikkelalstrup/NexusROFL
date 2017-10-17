@@ -1,5 +1,13 @@
 package server.endpoints;
 
+
+import com.google.gson.Gson;
+
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import java.util.ArrayList;
+
 import server.models.Post;
 import server.providers.PostProvider;
 
@@ -8,11 +16,28 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.sql.*;
 
+
 /**
  * Created by Filip on 10-10-2017.
  */
 @Path("/posts")
 public class PostEndpoint {
+
+
+    /*
+    This method returns all posts. To do so, the method creates an object of the PostProvider class
+    and inserts this object in an arraylist along with the post from the models-package.
+
+    Return response converts the arraylist getAllPosts from GSON to JSON.
+     */
+    @GET
+    public Response getAllPosts(){
+
+        PostProvider postProvider = new PostProvider();
+        ArrayList<Post> allPosts = postProvider.getAllPosts();
+        return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
+
+
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
@@ -34,5 +59,6 @@ public class PostEndpoint {
             e.printStackTrace();
             return Response.status(400).type("text/plain").entity("Could not create post").build();
         }
+
     }
 }
