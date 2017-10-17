@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import server.controllers.UserController;
 
+
 import java.sql.SQLException;
 
 /**
@@ -21,13 +22,12 @@ import java.sql.SQLException;
 @Path("/users")
 public class UserEndpoint {
 
-    /**
-     * Instantiating userProvider and userController so they can be used throughout UserEndpoint.java
-     */
-    UserProvider userProvider = new UserProvider();
-    UserController userController = new UserController();
-    private User createdUser;
+    /*
+    This method returns all users. To do so, the method creates an object of the UserProvider-class
+    and inserts this object in an arraylist along with the user from the models-package.
 
+    Return response converts the arraylist allUsers from GSON to JSON
+     */
     @GET
     public Response getAllUsers() {
 

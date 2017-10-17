@@ -75,6 +75,10 @@ public class User {
         this.id = id;
     }
 
+    public User(int id) {
+        this.id = id;
+    }
+
     //Setters
     public void setId(int id) {
         this.id = id;
