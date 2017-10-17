@@ -169,7 +169,31 @@ public class EventProvider {
 
     }
 
+    public ArrayList<Integer> getParticipantIdsByEventId(int event_id) {
 
+        ResultSet resultSet = null;
+        ArrayList<Integer> user_ids = new ArrayList<Integer>();
+
+        try {
+            PreparedStatement getParticipantIdByEventId = DBManager.getConnection().prepareStatement("SELECT * FROM events_has_users WHERE event_id = ?");
+
+            getParticipantIdByEventId.setInt(1, event_id);
+
+            resultSet = getParticipantIdByEventId.executeQuery();
+
+            while(resultSet.next()) {
+                user_ids.add(resultSet.getInt("user_id"));
+            }
+
+            resultSet.close();
+            getParticipantIdByEventId.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user_ids;
+    }
 
 
 }
