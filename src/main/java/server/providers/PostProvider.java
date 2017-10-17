@@ -29,7 +29,7 @@ public class PostProvider {
             createPostStatement.setInt(2, post.getEvent().getId());
         }
 
-        if (post.getEvent().getId() == 0) {
+        if (post.getParent().getId() == 0) {
             createPostStatement.setNull(3,1);
         } else {
             createPostStatement.setInt(3, post.getParent().getId());
