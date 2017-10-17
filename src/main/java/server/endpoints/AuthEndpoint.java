@@ -25,7 +25,7 @@ public class AuthEndpoint {
    String checkHashed;
 
    @POST
-           public Response AuthUser(String jsonUser) {
+   public Response AuthUser(String jsonUser) {
        User authUser = new Gson().fromJson(jsonUser, User.class);
 
 
