@@ -82,16 +82,39 @@ public class UserProvider {
         ResultSet resultSet = null;
 
         try {
-            PreparedStatement getAllUsers = DBManager.getConnection().
+            PreparedStatement getAllUsersStmt = DBManager.getConnection().
                     prepareStatement("SELECT * FROM users ORDER BY user_id");
 
 
-            resultSet = getAllUsers.executeQuery();
+            resultSet = getAllUsersStmt.executeQuery();
+
+            while(resultSet.next()){
+                User user = new User(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("firstname"),
+                        resultSet.getString("lastname"),
+                        resultSet.getString("email"),
+                        resultSet.getString("description"),
+                        resultSet.getString("gender").charAt(0),
+                        resultSet.getString("major"),
+                        resultSet.getInt("semester"));
+
+                allUsers.add(user);
+            }
+
+
+            resultSet.close();
+
+            getAllUsersStmt.close();
+
+            return allUsers;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
+
 
 
 }
