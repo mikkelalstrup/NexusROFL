@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Filip on 10-10-2017.
@@ -43,7 +44,10 @@ public class AuthEndpoint {
       if (checkHashed.equals(foundUser.getPassword())) {
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
-            token = JWT.create().withIssuer("ROFL").sign(algorithm);
+            Date expDate = new Date(System.currentTimeMillis()*1001);
+
+
+            token = JWT.create().withSubject(foundUser.getEmail()).withClaim("id",foundUser.getId()).withExpiresAt(expDate).withIssuer("ROFL").sign(algorithm);
            // tokenArray.add(token);
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();
