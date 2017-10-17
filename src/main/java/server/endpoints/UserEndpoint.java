@@ -41,7 +41,7 @@ public class UserEndpoint {
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
     }
-
+    @Secured
     @GET
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id){
