@@ -1,12 +1,14 @@
 package server.providers;
 
 
+import org.apache.ibatis.annotations.Select;
 import server.models.Event;
 import server.models.Post;
 import server.models.User;
 
 import server.util.DBManager;
 
+import javax.ws.rs.POST;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +42,7 @@ public class PostProvider {
             Getting all variables from the model class Post
             and adding all posts to the ArrayList
              */
-             while (resultSet.next()){
+            while (resultSet.next()) {
                 Post post = new Post(
                         resultSet.getInt("post_id"),
                         resultSet.getTimestamp("created"),
@@ -48,13 +50,13 @@ public class PostProvider {
                         resultSet.getString("content"),
                         new Event(resultSet.getInt("event_id")),
                         new Post(resultSet.getInt("parent_id"))
-                        );
+                );
 
                 allPosts.add(post);
 
-             }
-             resultSet.close();
-             getAllPostsStmt.close();
+            }
+            resultSet.close();
+            getAllPostsStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,7 +64,7 @@ public class PostProvider {
 
         return allPosts;
 
-        }
+    }
 
     public int createPost(Post post) throws SQLException {
 
@@ -74,14 +76,14 @@ public class PostProvider {
         //Inserting values into the prepared statement
         createPostStatement.setString(1, post.getContent());
 
-        if (post.getEvent().getId() == 0){
+        if (post.getEvent().getId() == 0) {
             createPostStatement.setNull(2, 1);
         } else {
             createPostStatement.setInt(2, post.getEvent().getId());
         }
 
         if (post.getParent().getId() == 0) {
-            createPostStatement.setNull(3,1);
+            createPostStatement.setNull(3, 1);
         } else {
             createPostStatement.setInt(3, post.getParent().getId());
         }
@@ -92,7 +94,7 @@ public class PostProvider {
         int rowsUpdated = createPostStatement.executeUpdate();
 
         //Checking if a row has been updated
-        if(rowsUpdated !=1) {
+        if (rowsUpdated != 1) {
             throw new SQLException("Error with creating a post, no rows are affected");
         }
 
@@ -100,7 +102,7 @@ public class PostProvider {
         ResultSet generatedKeys = createPostStatement.getGeneratedKeys();
 
         //Checking if primary key has been created
-        if(generatedKeys.next()) {
+        if (generatedKeys.next()) {
             post.setId(generatedKeys.getInt(1));
         } else {
             throw new SQLException("Error with creating post, could not retrieve ID");
@@ -116,7 +118,7 @@ public class PostProvider {
 
     //Creating method for getting one post
     public Post getPost(int post_id) {
-         Post post = null;
+        Post post = null;
 
         ResultSet resultSet = null;
 
@@ -131,12 +133,12 @@ public class PostProvider {
 
             while (resultSet.next()) {
                 post = new Post(
-                    resultSet.getInt("post_id"),
-                    resultSet.getTimestamp("created"),
-                    new User(resultSet.getInt("user_id")), //Creating an owner to the post
-                    resultSet.getString("content"),
-                    new Event(resultSet.getInt("event_id")), //Creating an event to the post
-                    new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")), //Creating an owner to the post
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")), //Creating an event to the post
+                        new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
                 );
 
             } //Closing query
@@ -150,6 +152,46 @@ public class PostProvider {
 
     }
 
+    /**Creating a method that gets all comments from one post by cheching if the post has a parent_id
+     *
+     * @param parent_id
+     * @return The method returns an ArrayList that contains all the comments to one post
+     */
+    public ArrayList<Post> getPostsByParentId(int parent_id) {
+
+        // Creating an object of the Arraylist
+        ArrayList<Post> allComments = new ArrayList<>();
+        ResultSet resultSet = null;
+
+        PreparedStatement getAllCommentsStatement = null;
+
+        try {
+            getAllCommentsStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE parent_id = ?");
+
+            getAllCommentsStatement.setInt(1, parent_id);
+            resultSet = getAllCommentsStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Post post = new Post(
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")),
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")),
+                        new Post(resultSet.getInt("parent_id"))
+                );
+
+                allComments.add(post); //Adding a post to all comments with a belonging parent_id
+            }
+            resultSet.close();
+            getAllCommentsStatement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } return allComments;
+
+    }
 }
 
 

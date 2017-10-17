@@ -80,5 +80,8 @@ public class PostEndpoint {
         Post post = postProvider.getPost(id);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
+
     }
-}
+
+
+    }
