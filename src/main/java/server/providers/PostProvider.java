@@ -16,6 +16,10 @@ import java.util.ArrayList;
  */
 public class PostProvider {
 
+    /*
+    PreparedStatement for getting all posts from posts.
+    */
+
     public ArrayList<Post> getAllPosts() {
         ArrayList<Post> allPosts = new ArrayList<>();
 
@@ -28,6 +32,10 @@ public class PostProvider {
             resultSet = getAllPostsStmt.executeQuery();
 
 
+            /*
+            Getting all variables from the model class Post
+            and adding all posts to the ArrayList
+             */
              while (resultSet.next()){
                 Post post = new Post(
                         resultSet.getInt("post_id"),
@@ -41,6 +49,9 @@ public class PostProvider {
                 allPosts.add(post);
 
              }
+             resultSet.close();
+             getAllPostsStmt.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
