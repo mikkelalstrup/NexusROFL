@@ -119,17 +119,18 @@ public class UserProvider {
         return allUsers;
     }
 
-    public User getUser(){
+    public User getUser(int user_id){
         User user = null;
 
         ResultSet resultSet = null;
 
                 try {
             PreparedStatement getUserStmt = DBManager.getConnection()
-                    .prepareStatement("SELECT FROM users WHERE user_id = ?");
+                    .prepareStatement("SELECT * FROM users WHERE user_id = ?");
+
+            getUserStmt.setInt(1, user_id);
 
             resultSet = getUserStmt.executeQuery();
-
 
                 while(resultSet.next()){
                     user = new User(

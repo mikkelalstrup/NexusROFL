@@ -37,9 +37,10 @@ public class UserEndpoint {
     }
 
     @GET
-    public Response getUser(){
+    @Path("{id}")
+    public Response getUser(@PathParam("id") int user_id){
 
-        User user = userProvider.getUser();
+        User user = userProvider.getUser(user_id);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
