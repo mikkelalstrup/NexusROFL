@@ -27,5 +27,6 @@ public class RootEndpoint {
         }
 
         return Response.status(200).type("text/plain").entity("User created").build();
+
     }
 }

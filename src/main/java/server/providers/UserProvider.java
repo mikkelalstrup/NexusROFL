@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created by Filip on 10-10-2017.
@@ -72,4 +73,52 @@ public class UserProvider {
         return user.getId();
 
     }
+    /*
+    PreparedStatetement for getting all users ordered by id from DB cafe_nexus
+     */
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> allUsers = new ArrayList<>();
+
+        ResultSet resultSet = null;
+
+        try {
+            PreparedStatement getAllUsersStmt = DBManager.getConnection().
+                    prepareStatement("SELECT * FROM users ORDER BY user_id");
+
+
+            resultSet = getAllUsersStmt.executeQuery();
+    /*
+    Getting variables from Models_User class
+    and adding users to ArrayList
+     */
+            while(resultSet.next()){
+                User user = new User(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("description"),
+                        resultSet.getString("gender").charAt(0),
+                        resultSet.getString("major"),
+                        resultSet.getInt("semester"));
+
+                allUsers.add(user);
+            }
+
+
+            resultSet.close();
+
+            getAllUsersStmt.close();
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allUsers;
+    }
+
+
+
 }
