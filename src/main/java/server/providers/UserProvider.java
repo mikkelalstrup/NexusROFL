@@ -110,9 +110,7 @@ public class UserProvider {
         return user;
     }
 
-    /*
-    PreparedStatetement for getting all users ordered by id from DB cafe_nexus
-     */
+    //PreparedStatetement for getting all users ordered by id from DB cafe_nexus
     public ArrayList<User> getAllUsers() {
         ArrayList<User> allUsers = new ArrayList<>();
 
@@ -156,6 +154,9 @@ public class UserProvider {
         return allUsers;
     }
 
+    /*
+    Get user by user_id
+     */
     public User getUser(int user_id){
         User user = null;
         EventProvider eventProvider = new EventProvider();
@@ -183,10 +184,6 @@ public class UserProvider {
                             resultSet.getString("gender").charAt(0),
                             resultSet.getString("major"),
                             resultSet.getInt("semester")
-                            /*
-                            TO DO - her skal getPost, getEvent indsættes når de er færdige
-                             */
-
                     );
                 }
 

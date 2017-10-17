@@ -22,10 +22,8 @@ import java.util.ArrayList;
  */
 public class PostProvider {
 
-    /*
-    PreparedStatement for getting all posts from posts.
-    */
 
+    //PreparedStatement for getting all posts from posts.
     public ArrayList<Post> getAllPosts() {
         ArrayList<Post> allPosts = new ArrayList<>();
 
@@ -66,6 +64,7 @@ public class PostProvider {
 
     }
 
+    //Creates a new post
     public int createPost(Post post) throws SQLException {
 
         //Creating prepared statement
