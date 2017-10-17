@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 /**
  * Created by Filip on 10-10-2017.
@@ -66,20 +65,22 @@ public class PostProvider {
     }
 
     //Creating method for getting one post
-    public ArrayList<Post> getOnePost() {
-     ArrayList<Post> onePost = new ArrayList<>(); //Creating object of ArrayList
+    public Post getPost(int post_id) {
+         Post post = null;
 
         ResultSet resultSet = null;
 
         //Creating prepared statement for getting one post
         PreparedStatement getOnePostStatement = null;
         try {
-            getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT FROM posts WHERE posts = post_id");
+            getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE post_id = ?");
+
+            getOnePostStatement.setInt(1, post_id);
 
             resultSet = getOnePostStatement.executeQuery();
 
             while (resultSet.next()) {
-                Post post = new Post(
+                post = new Post(
                     resultSet.getInt("post_id"),
                     resultSet.getTimestamp("created"),
                     new User(resultSet.getInt("user_id")), //Creating an owner to the post
@@ -95,7 +96,7 @@ public class PostProvider {
             e.printStackTrace();
 
         } //Returning one post
-        return onePost;
+        return post;
 
     }
 }

@@ -45,9 +45,12 @@ public class PostEndpoint {
      * @return It returns an response that converts the ArrayList onePost from Gson to Json.
      */
     @GET
-    public Response getOnePost() {
+    @Path("{id}")
+    public Response getPost(@PathParam("id") int id) {
         PostProvider postProvider = new PostProvider(); //Creates an object
-        ArrayList<Post> onePost = postProvider.getOnePost();
-        return Response.status(200).type("application/json").entity(new Gson().toJson(onePost)).build();
+
+        Post post = postProvider.getPost(id);
+
+        return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
     }
 }
