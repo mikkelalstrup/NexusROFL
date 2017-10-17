@@ -119,6 +119,39 @@ public class UserProvider {
         return allUsers;
     }
 
+    public User getUser(int user_id){
+        User user = null;
 
+        ResultSet resultSet = null;
+
+                try {
+            PreparedStatement getUserStmt = DBManager.getConnection()
+                    .prepareStatement("SELECT * FROM users WHERE user_id = ?");
+
+            getUserStmt.setInt(1, user_id);
+
+            resultSet = getUserStmt.executeQuery();
+
+                while(resultSet.next()){
+                    user = new User(
+                            resultSet.getInt("user_id"),
+                            resultSet.getString("first_name"),
+                            resultSet.getString("last_name"),
+                            resultSet.getString("email"),
+                            resultSet.getString("description"),
+                            resultSet.getString("gender").charAt(0),
+                            resultSet.getString("major"),
+                            resultSet.getInt("semester")
+                            /*
+                            TO DO - her skal getPost, getEvent indsættes når de er færdige
+                             */
+                    );
+                }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            return user;
+    }
 
 }

@@ -37,7 +37,16 @@ public class UserEndpoint {
 
     }
 
+    @GET
+    @Path("{id}")
+    public Response getUser(@PathParam("id") int user_id){
 
+        User user = userProvider.getUser(user_id);
+
+        return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
+    }
+  
+  
     /**
      * This method lets the client create a new user. The parameters catches the specific input from the client.
      * The Endpoint creates a User object using the parameters stated below.
