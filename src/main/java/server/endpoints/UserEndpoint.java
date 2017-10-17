@@ -3,6 +3,8 @@ package server.endpoints;
 
 import com.google.gson.Gson;
 import server.models.User;
+import server.providers.EventProvider;
+import server.providers.PostProvider;
 import server.providers.UserProvider;
 
 import javax.ws.rs.*;
@@ -40,7 +42,15 @@ public class UserEndpoint {
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id){
 
+        EventProvider eventProvider = new EventProvider();
+        PostProvider postProvider = new PostProvider();
+
         User user = userProvider.getUser(user_id);
+
+
+        user.getEvents().addAll(eventProvider.getEventByUserId(user_id));
+
+        user.getPosts().addAll(postProvider.getPostByUserId(user_id));
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }

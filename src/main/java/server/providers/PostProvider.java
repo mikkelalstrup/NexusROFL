@@ -150,6 +150,44 @@ public class PostProvider {
 
     }
 
+    //Creating method for getting one post
+    public ArrayList<Post> getPostByUserId(int user_id) {
+        ArrayList<Post> posts = new ArrayList<Post>();
+
+        ResultSet resultSet = null;
+
+        //Creating prepared statement for getting one post
+        PreparedStatement getOnePostStatement = null;
+        try {
+            getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE user_id = ?");
+
+            getOnePostStatement.setInt(1, user_id);
+
+            resultSet = getOnePostStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Post post = new Post(
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")), //Creating an owner to the post
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")), //Creating an event to the post
+                        new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
+                );
+
+                posts.add(post);
+
+            } //Closing query
+            resultSet.close();
+            getOnePostStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } //Returning one post
+        return posts;
+
+    }
+
 }
 
 

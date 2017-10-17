@@ -121,6 +121,8 @@ public class UserProvider {
 
     public User getUser(int user_id){
         User user = null;
+        EventProvider eventProvider = new EventProvider();
+        PostProvider postProvider = new PostProvider();
 
         ResultSet resultSet = null;
 
@@ -145,6 +147,7 @@ public class UserProvider {
                             /*
                             TO DO - her skal getPost, getEvent indsættes når de er færdige
                              */
+
                     );
                 }
 
