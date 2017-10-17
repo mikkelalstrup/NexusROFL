@@ -5,15 +5,11 @@ import com.google.gson.Gson;
 import server.models.User;
 import server.providers.UserProvider;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 import server.controllers.UserController;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 
 import java.sql.SQLException;
 
@@ -57,6 +53,7 @@ public class UserEndpoint {
      * @param semester
      * @return
      */
+
     @POST
     @Consumes("application/x-www-form-urlencoded")
     public Response createUserMethod(
