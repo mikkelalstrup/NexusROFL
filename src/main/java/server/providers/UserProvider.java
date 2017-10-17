@@ -94,8 +94,8 @@ public class UserProvider {
             while(resultSet.next()){
                 User user = new User(
                         resultSet.getInt("user_id"),
-                        resultSet.getString("firstname"),
-                        resultSet.getString("lastname"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
                         resultSet.getString("email"),
                         resultSet.getString("description"),
                         resultSet.getString("gender").charAt(0),

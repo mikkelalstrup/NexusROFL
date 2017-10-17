@@ -24,7 +24,7 @@ public class UserEndpoint {
 
         ArrayList<User> allUsers = userProvider.getAllUsers();
 
-        return Response.status(200).type("text/plain").entity(new Gson().toJson(allUsers)).build();
+        return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
     }
 
 
