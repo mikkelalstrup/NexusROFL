@@ -4,6 +4,7 @@ import server.models.User;
 import server.util.Auth;
 import server.util.DBManager;
 
+import javax.xml.ws.Response;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,6 +74,42 @@ public class UserProvider {
         return user.getId();
 
     }
+
+    public User getUserByEmail(String email){
+        User user = null;
+
+        ResultSet resultSet = null;
+
+        try {
+            PreparedStatement getUserByEmailStmt = DBManager.getConnection().prepareStatement
+                    ("SELECT * FROM users WHERE email = ?");
+
+            getUserByEmailStmt.setString(1, email);
+            resultSet = getUserByEmailStmt.executeQuery();
+            while(resultSet.next()){
+                user = new User(
+                        resultSet.getString("email"),
+                        resultSet.getString("salt"),
+                        resultSet.getString("password")
+                );
+
+            }
+
+            if(user == null){
+                throw new IllegalArgumentException();
+            }
+
+            resultSet.close();
+
+          // getUserByEmailStmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
     /*
     PreparedStatetement for getting all users ordered by id from DB cafe_nexus
      */
@@ -138,6 +175,8 @@ public class UserProvider {
                             resultSet.getString("first_name"),
                             resultSet.getString("last_name"),
                             resultSet.getString("email"),
+                            resultSet.getString("password"),
+                            resultSet.getString("salt"),
                             resultSet.getString("description"),
                             resultSet.getString("gender").charAt(0),
                             resultSet.getString("major"),
