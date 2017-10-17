@@ -39,7 +39,7 @@ public class UserEndpoint {
     @GET
     public Response getUser(){
 
-        ArrayList<User> user = userProvider.getUser();
+        User user = userProvider.getUser();
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
