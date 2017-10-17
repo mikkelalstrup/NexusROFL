@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created by Filip on 10-10-2017.
@@ -72,4 +73,16 @@ public class UserProvider {
         return user.getId();
 
     }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> allUsers = new ArrayList<>();
+
+        try {
+            PreparedStatement getAllUsers = DBManager.getConnection().prepareStatement("SELECT * FROM users ORDER BY user_id");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
