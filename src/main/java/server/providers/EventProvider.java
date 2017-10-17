@@ -66,6 +66,23 @@ public class EventProvider {
 
     }
 
+    public Event subscribeToEvent(int user_id, int event_id){
+        Event event = null;
+
+        try{
+            PreparedStatement subscribeToEventStmt = DBManager.getConnection()
+                    .prepareStatement("INSERT INTO events_has_users (user_id, event_id) VALUES (?,?)");
+
+            subscribeToEventStmt.setInt(1, user_id);
+            subscribeToEventStmt.setInt(2, event_id);
+            subscribeToEventStmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
 }

@@ -65,5 +65,13 @@ public class EventEndpoint {
 
     }
 
+    @POST
+    @Path("/subscribe")
+    public Response subscribeToEvent(String jsonData){
+
+        EventProvider eventProvider = new EventProvider();
+       add.user_id(subscribeToEvent());
+            }
+
 
 }
