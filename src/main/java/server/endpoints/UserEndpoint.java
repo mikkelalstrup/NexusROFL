@@ -3,6 +3,8 @@ package server.endpoints;
 
 import com.google.gson.Gson;
 import server.models.User;
+import server.providers.EventProvider;
+import server.providers.PostProvider;
 import server.providers.UserProvider;
 
 import javax.ws.rs.*;
@@ -10,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 import server.controllers.UserController;
+
 
 import java.sql.SQLException;
 
@@ -21,13 +24,15 @@ import java.sql.SQLException;
 @Path("/users")
 public class UserEndpoint {
 
-    /**
-     * Instantiating userProvider and userController so they can be used throughout UserEndpoint.java
-     */
     UserProvider userProvider = new UserProvider();
     UserController userController = new UserController();
-    private User createdUser;
 
+    /*
+    This method returns all users. To do so, the method creates an object of the UserProvider-class
+    and inserts this object in an arraylist along with the user from the models-package.
+
+    Return response converts the arraylist allUsers from GSON to JSON
+     */
     @GET
     public Response getAllUsers() {
 
@@ -41,7 +46,15 @@ public class UserEndpoint {
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id){
 
+        EventProvider eventProvider = new EventProvider();
+        PostProvider postProvider = new PostProvider();
+
         User user = userProvider.getUser(user_id);
+
+
+        user.getEvents().addAll(eventProvider.getEventByUserId(user_id));
+
+        user.getPosts().addAll(postProvider.getPostByUserId(user_id));
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
@@ -56,6 +69,7 @@ public class UserEndpoint {
 
     @POST
     public Response createUser(String jsonUser) {
+        User createdUser;
         try {
             createdUser = new Gson().fromJson(jsonUser, User.class);
         } catch (IllegalArgumentException e) {
@@ -79,13 +93,12 @@ public class UserEndpoint {
         try {
             userProvider.createUser(createdUser);
         } catch (SQLException e) {
-            System.out.print("Fejl 500 yo");
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
-            return Response.status(201).type("text/plain").entity("User Created").build();
 
-
+        return Response.status(201).type("text/plain").entity("User Created").build();
+        
         }
     }
 

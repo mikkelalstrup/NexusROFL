@@ -5,7 +5,13 @@ import server.models.Event;
 import server.models.User;
 import server.util.DBManager;
 
+
+
+import server.models.User;
+import server.util.DBManager;
+
 import javax.ws.rs.Path;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,11 +22,62 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 
+
 /**
  * Created by Filip on 10-10-2017.
  */
 public class EventProvider {
 
+    /*
+    PreparedStatetement for getting all events ordered by id from DB cafe_nexus
+     */
+    public ArrayList<Event> getAllEvents() {
+        ArrayList<Event> allEvents = new ArrayList<>();
+
+        ResultSet resultSet = null;
+
+        try {
+            PreparedStatement getAllEventsStmt = null;
+
+            getAllEventsStmt = DBManager.getConnection().
+                    prepareStatement("SELECT * FROM events ORDER BY event_id");
+
+
+            resultSet = getAllEventsStmt.executeQuery();
+
+         /*
+         Getting variables from Models_Event class
+         and adding events to ArrayList
+         */
+            while (resultSet.next()) {
+                Event event = new Event(
+                        resultSet.getInt("event_id"),
+                        resultSet.getString("title"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("owner_id")),
+                        resultSet.getTimestamp("start"),
+                        resultSet.getTimestamp("end"),
+                        resultSet.getString("description"));
+
+                allEvents.add(event);
+
+
+            }
+
+            resultSet.close();
+
+            getAllEventsStmt.close();
+
+        } catch (
+                SQLException e)
+
+        {
+            e.printStackTrace();
+        }
+
+        return allEvents;
+
+    }
 
     public Event getEvent(int event_id) {
         ArrayList<Event> getEvent = new ArrayList<>();
@@ -51,6 +108,35 @@ public class EventProvider {
         return event;
     }
 
+    public ArrayList<Event> getEventByUserId(int user_id) {
+        ArrayList<Event> events = new ArrayList<>();
+        ResultSet resultSet = null;
+
+        try {
+            PreparedStatement getEventStmt = DBManager.getConnection()
+                    .prepareStatement("SELECT * FROM events WHERE owner_id = ?");
+
+            getEventStmt.setInt(1, user_id);
+
+            resultSet = getEventStmt.executeQuery();
+
+            while (resultSet.next()) {
+                Event event = new Event(
+                        resultSet.getInt("event_id"),
+                        resultSet.getString("title"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("owner_id")),
+                        resultSet.getTimestamp("start"),
+                        resultSet.getTimestamp("end"),
+                        resultSet.getString("description"));
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
+
 
     public void createEvent(Event event) throws SQLException {
 
@@ -65,6 +151,7 @@ public class EventProvider {
         createEventStmt.executeUpdate();
 
     }
+
 
     public void subscribeToEvent(int user_id, int event_id) {
 
@@ -81,6 +168,7 @@ public class EventProvider {
         }
 
     }
+
 
 
 

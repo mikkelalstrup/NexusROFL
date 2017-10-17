@@ -15,6 +15,8 @@ public class Post {
     private Event event;
     private Post parent;
 
+    private ArrayList<Post> comments;
+
 
 
     public Post(int id, Timestamp created, User owner, String content, Event event, Post parent) {
@@ -24,6 +26,8 @@ public class Post {
         this.content = content;
         this.event = event;
         this.parent = parent;
+
+        this.comments = new ArrayList<Post>();
     }
 
 
@@ -34,12 +38,13 @@ public class Post {
         this.content = content;
         this.event = new Event(event);
         this.parent = new Post(parent);
-
+        this.comments = new ArrayList<Post>();
     }
 
 
     public Post(int id) {
         this.id = id;
+        this.comments = new ArrayList<Post>();
     }
 
 
@@ -68,5 +73,7 @@ public class Post {
         return parent;
     }
 
-    public Post() {}
+    public ArrayList<Post> getComments() {
+        return comments;
+    }
 }
