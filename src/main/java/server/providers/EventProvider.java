@@ -152,5 +152,25 @@ public class EventProvider {
 
     }
 
+
+    public void subscribeToEvent(int user_id, int event_id) {
+
+        try {
+            PreparedStatement subscribeToEventStmt = DBManager.getConnection()
+                    .prepareStatement("INSERT INTO events_has_users (user_id, event_id) VALUES (?,?)");
+
+            subscribeToEventStmt.setInt(1, user_id);
+            subscribeToEventStmt.setInt(2, event_id);
+            subscribeToEventStmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
 }
 
