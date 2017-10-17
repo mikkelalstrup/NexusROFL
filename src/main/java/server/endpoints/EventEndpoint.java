@@ -69,8 +69,16 @@ public class EventEndpoint {
     @Path("/subscribe")
     public Response subscribeToEvent(String jsonData){
 
+        JsonObject jsonObj = new Gson().fromJson(jsonData, JsonObject.class);
+        int user_id = jsonObj.get("user_id").getAsInt();
+        int event_id = jsonObj.get("event_id").getAsInt();
+
         EventProvider eventProvider = new EventProvider();
-       add.user_id(subscribeToEvent());
+
+        eventProvider.subscribeToEvent(user_id, event_id);
+
+        return Response.status(200).type("text/plain").entity("User subscribed to event").build();
+
             }
 
 
