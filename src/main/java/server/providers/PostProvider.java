@@ -233,6 +233,40 @@ public class PostProvider {
 
     }
 
+    public ArrayList<Post> getAllPostsByEventId(int event_id) {
+        ArrayList<Post> posts = new ArrayList<Post>();
+        ResultSet resultSet = null;
+
+        PreparedStatement getAllPostsByEventIdStmt = null;
+
+        try {
+            getAllPostsByEventIdStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE event_id = ?");
+
+            getAllPostsByEventIdStmt.setInt(1, event_id);
+
+            resultSet = getAllPostsByEventIdStmt.executeQuery();
+
+            while (resultSet.next()) {
+                Post post = new Post(
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")),
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")),
+                        new Post(resultSet.getInt("parent_id"))
+                );
+
+                posts.add(post);
+            }
+            resultSet.close();
+            getAllPostsByEventIdStmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return posts;
+    }
+
 }
 
 
