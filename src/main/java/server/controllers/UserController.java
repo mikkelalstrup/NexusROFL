@@ -38,7 +38,7 @@ public class UserController {
         /**
          * A user object is created, which is needed to validate the different parameters.
          */
-        User validatedUser = new User(password,firstName,lastName,email,gender,description,major,semester);
+        User validatedUser = new User(password,firstName,lastName,email,description, gender, major,semester);
 
         /**
          * The email is split up by the "@" in the email, which makes us able to validate only the domain-side of the
