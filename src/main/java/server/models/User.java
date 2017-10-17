@@ -14,9 +14,9 @@ public class User {
     private String lastName;
     private String email;
     private String description;
-    private char gender;
+    private Character gender;
     private String major;
-    private int semester;
+    private Integer semester;
     private ArrayList<Event> events;
     private ArrayList<Post> posts;
 
