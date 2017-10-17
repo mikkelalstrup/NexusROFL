@@ -13,13 +13,24 @@ import java.sql.SQLException;
 
 @Path("/")
 public class RootEndpoint {
-
     @GET
     public Response defaultGetMethod(){
 
         String test = null;
         try {
             test = DBManager.getConnection().getCatalog();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User user1 = new User("test", "test","test","test",'m',"c","test",1);
+
+
+
+
+        UserProvider userss = new UserProvider();
+        try {
+            userss.createUser(user1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
