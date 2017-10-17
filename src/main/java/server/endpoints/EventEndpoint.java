@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import com.google.gson.JsonObject;
 import server.models.Event;
 import server.providers.EventProvider;
+import server.providers.PostProvider;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -59,8 +60,12 @@ public class EventEndpoint {
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
         EventProvider eventProvider = new EventProvider();
+        PostProvider postProvider = new PostProvider();
+
         Event event = eventProvider.getEvent(event_id);
-        
+
+        event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
+
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
     }
