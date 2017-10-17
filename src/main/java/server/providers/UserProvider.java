@@ -87,7 +87,10 @@ public class UserProvider {
 
 
             resultSet = getAllUsersStmt.executeQuery();
-
+    /*
+    Getting variables from Models_User class
+    and adding users to ArrayList
+     */
             while(resultSet.next()){
                 User user = new User(
                         resultSet.getInt("user_id"),
@@ -107,12 +110,13 @@ public class UserProvider {
 
             getAllUsersStmt.close();
 
-            return allUsers;
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return allUsers;
     }
 
 
