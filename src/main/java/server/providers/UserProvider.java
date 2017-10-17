@@ -73,12 +73,21 @@ public class UserProvider {
         return user.getId();
 
     }
-
+    /*
+    PreparedStatetement for getting all users ordered by id from DB cafe_nexus
+     */
     public ArrayList<User> getAllUsers() {
         ArrayList<User> allUsers = new ArrayList<>();
 
+        ResultSet resultSet = null;
+
         try {
-            PreparedStatement getAllUsers = DBManager.getConnection().prepareStatement("SELECT * FROM users ORDER BY user_id");
+            PreparedStatement getAllUsers = DBManager.getConnection().
+                    prepareStatement("SELECT * FROM users ORDER BY user_id");
+
+
+            resultSet = getAllUsers.executeQuery();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
