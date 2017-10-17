@@ -22,7 +22,7 @@ public class EventProvider {
 
         try {
            PreparedStatement getEventStmt = DBManager.getConnection()
-                    .prepareStatement("SELECT FROM events WHERE event_id = ?");
+                    .prepareStatement("SELECT * FROM events WHERE event_id = ?");
 
            getEventStmt.setInt(1, event_id);
 
@@ -37,8 +37,6 @@ public class EventProvider {
                     resultSet.getTimestamp("start"),
                     resultSet.getTimestamp("end"),
                     resultSet.getString("description"));
-
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
