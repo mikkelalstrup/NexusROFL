@@ -13,7 +13,6 @@ import java.sql.SQLException;
 
 @Path("/")
 public class RootEndpoint {
-
     @GET
     public Response defaultGetMethod(){
 
