@@ -15,7 +15,7 @@ public class UserController {
     }
 
     /**
-     * validateUserCreation is used to verify the input given from the client when trying to create a new user. This
+     * The method "validateUserCreation" is used to verify the input given from the client when trying to create a new user. This
      * is done to make sure the new user has a valid email, gender and semester in order to store in the database.
      *
      * The below parameters are given from the userEndPoint and are called as parameters in the validateUseCreation
