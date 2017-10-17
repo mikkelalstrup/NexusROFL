@@ -74,10 +74,12 @@ public class PostEndpoint {
      */
     @GET
     @Path("{id}")
-    public Response getPost(@PathParam("id") int id) {
+    public Response getPost(@PathParam("id") int post_id) {
         PostProvider postProvider = new PostProvider(); //Creates an object
 
-        Post post = postProvider.getPost(id);
+        Post post = postProvider.getPost(post_id);
+
+        post.getComments().addAll(postProvider.getPostsByParentId(post_id));
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
 
