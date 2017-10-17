@@ -1,6 +1,7 @@
 package server.endpoints;
 
 import com.google.gson.Gson;
+import server.controllers.UserController;
 import server.models.Event;
 import server.providers.EventProvider;
 
@@ -61,10 +62,14 @@ public class EventEndpoint {
     public Response getEvent(@PathParam("id") int event_id){
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
+        UserController userController = new UserController();
 
         Event event = eventProvider.getEvent(event_id);
 
         event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
+
+        //Get all participants in the event
+        event.getParticipants().addAll(userController.getParticipants(event_id));
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 

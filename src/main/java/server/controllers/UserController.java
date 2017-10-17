@@ -1,6 +1,10 @@
 package server.controllers;
 
 import server.models.User;
+import server.providers.EventProvider;
+import server.providers.UserProvider;
+
+import java.util.ArrayList;
 
 /**
  * Created by Marc & Mikkel on 17-10-2017.
@@ -88,5 +92,22 @@ public class UserController {
         if (gender.length() > 1){
             throw new IllegalArgumentException("Gender can only be \"m\" or \"f\"");
         }
+    }
+
+    public ArrayList<User> getParticipants(int event_id){
+
+        EventProvider eventProvider = new EventProvider();
+        UserProvider userProvider = new UserProvider();
+
+        ArrayList<User> participants = new ArrayList<User>();
+
+        for(Integer user_id: eventProvider.getParticipantIdsByEventId(event_id)) {
+
+            participants.add(userProvider.getUser(user_id));
+
+        }
+
+        return participants;
+
     }
 }
