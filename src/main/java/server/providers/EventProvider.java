@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class EventProvider {
 
     /*
-    PreparedStatetement for getting all users ordered by id from DB cafe_nexus
+    PreparedStatetement for getting all events ordered by id from DB cafe_nexus
      */
     public ArrayList<Event> getAllEvents() {
         ArrayList<Event> allEvents = new ArrayList<>();

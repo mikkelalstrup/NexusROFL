@@ -16,6 +16,13 @@ import java.util.ArrayList;
 @Path("/events")
 public class EventEndpoint {
 
+
+    /*
+    This method returns all events. To do so, the method creates an object of the EventProvider-class
+    and inserts this object in an arraylist along with the user from the models-package.
+
+    Return response converts the arraylist allEvents from GSON to JSON
+     */
     @GET
     public Response getAllEvents(){
 
