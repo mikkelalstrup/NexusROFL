@@ -14,13 +14,18 @@ public class User {
     private String lastName;
     private String email;
     private String description;
-    private char gender;
+    private Character gender;
     private String major;
-    private int semester;
+    private Integer semester;
     private ArrayList<Event> events;
     private ArrayList<Post> posts;
 
-    public User(int id, String password, String salt, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
+    public User (){
+        this.events = new ArrayList<Event>();
+        this.posts = new ArrayList<Post>();
+    }
+
+    public User(String password, String salt, String firstName) {
         this.id = id;
         this.password = password;
         this.salt = salt;
@@ -37,8 +42,8 @@ public class User {
     }
 
     // Use this constructor when assembling data for new user creation
-    public User(String plaintext_password, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
-        this.password = plaintext_password;
+       public User(String password, String firstName, String lastName, String email, String description, char gender, String major, int semester){
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -50,6 +55,7 @@ public class User {
         this.events = new ArrayList<Event>();
         this.posts = new ArrayList<Post>();
     }
+
 
     // Use this constructor when getting users from the database -> Does not contain password and salt
     public User(int id, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
@@ -63,7 +69,10 @@ public class User {
         this.semester = semester;
         this.events = new ArrayList<Event>();
         this.posts = new ArrayList<Post>();
+    }
 
+    public User(int id) {
+        this.id = id;
     }
 
     public User(int id) {
