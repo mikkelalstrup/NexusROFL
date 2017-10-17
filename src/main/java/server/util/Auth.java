@@ -14,6 +14,7 @@ public class Auth {
         // Creates an instance of MessageDigest with SHA-256 hashing algorithm
         // This object is used to perform the hashing of passwords
         try {
+
             digester = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

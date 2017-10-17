@@ -21,11 +21,11 @@ public class DBManager {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
                     "jdbc:mysql://"
-                            + System.getenv("DATABASE_HOST") + ":"
-                            + System.getenv("DATABASE_PORT") + "/"
-                            + System.getenv("DATABASE_NAME") + "?useSSL=false&serverTimezone=GMT",
-                    System.getenv("DATABASE_USER"),
-                    System.getenv("DATABASE_PASSWORD"));
+                            + System.getenv(Config.getDatabaseHost()) + ":"
+                            + System.getenv(Config.getDatabasePort()) + "/"
+                            + System.getenv(Config.getDatabaseName()) + "?useSSL=false&serverTimezone=GMT",
+                    System.getenv(Config.getDatabaseUser()),
+                    System.getenv(Config.getDatabasePassword()));
         } catch (SQLException e) {
             System.out.print(e.getMessage());
             e.printStackTrace();
