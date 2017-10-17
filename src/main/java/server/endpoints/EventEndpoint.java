@@ -40,9 +40,6 @@ public class EventEndpoint {
 
     }
 
-@Path("/events")
-public class EventEndpoint {
-
     @POST
     public Response createEvent(String eventJson) {
 
