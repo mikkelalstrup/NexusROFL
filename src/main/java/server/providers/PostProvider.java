@@ -22,8 +22,19 @@ public class PostProvider {
 
         //Inserting values into the prepared statement
         createPostStatement.setString(1, post.getContent());
-        createPostStatement.setInt(2, post.getEvent().getId());
-        createPostStatement.setInt(3, post.getParent().getId());
+
+        if (post.getEvent().getId() == 0){
+            createPostStatement.setNull(2, 1);
+        } else {
+            createPostStatement.setInt(2, post.getEvent().getId());
+        }
+
+        if (post.getEvent().getId() == 0) {
+            createPostStatement.setNull(3,1);
+        } else {
+            createPostStatement.setInt(3, post.getParent().getId());
+        }
+
         createPostStatement.setInt(4, post.getOwner().getId());
 
         //Execute update
