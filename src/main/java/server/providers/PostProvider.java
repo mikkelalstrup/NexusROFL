@@ -113,6 +113,38 @@ public class PostProvider {
         return post.getId();
     }
 
+    public ArrayList<Post> getPostByOwnerId() {
+        ArrayList<Post> posts = new ArrayList<>();
+
+        ResultSet resultSet = null;
+
+
+            try {
+                PreparedStatement getPostByOwnerIdStmt = DBManager.getConnection().
+                        prepareStatement("SELECT * FROM posts WHERE user_id = ?");
+
+                resultSet = getPostByOwnerIdStmt.executeQuery();
+
+
+                while (resultSet.next()){
+                   Post post = new Post(
+                            resultSet.getInt("post_id"),
+                            resultSet.getTimestamp("created"),
+                            new User(resultSet.getInt("user_id")),
+                            resultSet.getString("content"),
+                            new Event(resultSet.getInt("event_id")),
+                            new Post(resultSet.getInt("parent_id"))
+                    );
+
+                   posts.add(post);
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        return posts;
+    }
+
 }
 
 
