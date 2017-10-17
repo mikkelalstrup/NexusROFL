@@ -22,6 +22,9 @@ import java.sql.SQLException;
 @Path("/users")
 public class UserEndpoint {
 
+    UserProvider userProvider = new UserProvider();
+    UserController userController = new UserController();
+
     /*
     This method returns all users. To do so, the method creates an object of the UserProvider-class
     and inserts this object in an arraylist along with the user from the models-package.
@@ -56,6 +59,7 @@ public class UserEndpoint {
 
     @POST
     public Response createUser(String jsonUser) {
+        User createdUser;
         try {
             createdUser = new Gson().fromJson(jsonUser, User.class);
         } catch (IllegalArgumentException e) {
@@ -79,13 +83,12 @@ public class UserEndpoint {
         try {
             userProvider.createUser(createdUser);
         } catch (SQLException e) {
-            System.out.print("Fejl 500 yo");
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
-            return Response.status(201).type("text/plain").entity("User Created").build();
 
-
+        return Response.status(201).type("text/plain").entity("User Created").build();
+        
         }
     }
 
