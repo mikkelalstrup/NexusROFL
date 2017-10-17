@@ -1,6 +1,15 @@
 package server.endpoints;
 
 import com.google.gson.Gson;
+import server.controllers.UserController;
+import server.models.Event;
+import server.providers.EventProvider;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 import server.controllers.ContentController;
 
@@ -13,6 +22,7 @@ import java.util.ArrayList;
 import com.google.gson.JsonObject;
 import server.models.Event;
 import server.providers.EventProvider;
+import server.providers.PostProvider;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,20 +32,45 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 
+
 /**
  * Created by Filip on 10-10-2017.
  */
 
-
 @Path("/events")
 public class EventEndpoint {
+
+
+    /*
+    This method returns all events. To do so, the method creates an object of the EventProvider-class
+    and inserts this object in an arraylist along with the user from the models-package.
+
+    Return response converts the arraylist allEvents from GSON to JSON
+     */
+    @GET
+    public Response getAllEvents(){
+
+        EventProvider eventProvider = new EventProvider();
+
+        ArrayList<Event> allEvents = eventProvider.getAllEvents();
+
+        return Response.status(200).type("text/plain").entity(new Gson().toJson(allEvents)).build();
+    }
 
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
         EventProvider eventProvider = new EventProvider();
+        PostProvider postProvider = new PostProvider();
+        UserController userController = new UserController();
+
         Event event = eventProvider.getEvent(event_id);
-        
+
+        event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
+
+        //Get all participants in the event
+        event.getParticipants().addAll(userController.getParticipants(event_id));
+
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
     }
@@ -63,7 +98,24 @@ public class EventEndpoint {
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
+
     }
+
+    @POST
+    @Path("/subscribe")
+    public Response subscribeToEvent(String jsonData){
+
+        JsonObject jsonObj = new Gson().fromJson(jsonData, JsonObject.class);
+        int user_id = jsonObj.get("user_id").getAsInt();
+        int event_id = jsonObj.get("event_id").getAsInt();
+
+        EventProvider eventProvider = new EventProvider();
+
+        eventProvider.subscribeToEvent(user_id, event_id);
+
+        return Response.status(200).type("text/plain").entity("User subscribed to event").build();
+
+            }
 
 
 }

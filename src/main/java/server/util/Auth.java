@@ -26,8 +26,7 @@ public class Auth {
      * @param salt The user specific salt
      * @return A SHA-256 hashed value of the password and salt combination
      */
-    public static String hashPassword(String password, String salt) {
-        return (performHashing(password + salt));
+    public static String hashPassword(String password, String salt) { return (performHashing(password + salt));
     }
 
     /**
