@@ -21,7 +21,7 @@ import java.sql.Statement;
  */
 public class EventProvider {
 
-
+    //methoed for getting a single event by event_id
     public Event getEvent(int event_id) {
         ArrayList<Event> getEvent = new ArrayList<>();
         Event event = null;
@@ -51,10 +51,12 @@ public class EventProvider {
         return event;
     }
 
-
+    //Method for creating a new event
     public void createEvent(Event event) throws SQLException {
 
-        PreparedStatement createEventStmt = DBManager.getConnection().prepareStatement("INSERT INTO events (title, description, start, events.end, owner_id) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement createEventStmt = DBManager.getConnection().
+                prepareStatement("INSERT INTO events (title, description, start, events.end, owner_id) VALUES (?,?,?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS);
 
         createEventStmt.setString(1, event.getTitle());
         createEventStmt.setString(2, event.getDescription());
