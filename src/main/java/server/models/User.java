@@ -42,7 +42,7 @@ public class User {
     }
 
     // Use this constructor when assembling data for new user creation
-       public User(String password, String firstName, String lastName, String email, char gender, String description, String major, int semester){
+       public User(String password, String firstName, String lastName, String email, String description, char gender, String major, int semester){
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
