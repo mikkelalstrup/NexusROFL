@@ -40,7 +40,7 @@ public class PostProvider {
             Getting all variables from the model class Post
             and adding all posts to the ArrayList
              */
-             while (resultSet.next()){
+            while (resultSet.next()) {
                 Post post = new Post(
                         resultSet.getInt("post_id"),
                         resultSet.getTimestamp("created"),
@@ -48,13 +48,13 @@ public class PostProvider {
                         resultSet.getString("content"),
                         new Event(resultSet.getInt("event_id")),
                         new Post(resultSet.getInt("parent_id"))
-                        );
+                );
 
                 allPosts.add(post);
 
-             }
-             resultSet.close();
-             getAllPostsStmt.close();
+            }
+            resultSet.close();
+            getAllPostsStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class PostProvider {
 
         return allPosts;
 
-        }
+    }
 
     public int createPost(Post post) throws SQLException {
 
@@ -74,14 +74,14 @@ public class PostProvider {
         //Inserting values into the prepared statement
         createPostStatement.setString(1, post.getContent());
 
-        if (post.getEvent().getId() == 0){
+        if (post.getEvent().getId() == 0) {
             createPostStatement.setNull(2, 1);
         } else {
             createPostStatement.setInt(2, post.getEvent().getId());
         }
 
         if (post.getParent().getId() == 0) {
-            createPostStatement.setNull(3,1);
+            createPostStatement.setNull(3, 1);
         } else {
             createPostStatement.setInt(3, post.getParent().getId());
         }
@@ -92,7 +92,7 @@ public class PostProvider {
         int rowsUpdated = createPostStatement.executeUpdate();
 
         //Checking if a row has been updated
-        if(rowsUpdated !=1) {
+        if (rowsUpdated != 1) {
             throw new SQLException("Error with creating a post, no rows are affected");
         }
 
@@ -100,7 +100,7 @@ public class PostProvider {
         ResultSet generatedKeys = createPostStatement.getGeneratedKeys();
 
         //Checking if primary key has been created
-        if(generatedKeys.next()) {
+        if (generatedKeys.next()) {
             post.setId(generatedKeys.getInt(1));
         } else {
             throw new SQLException("Error with creating post, could not retrieve ID");
@@ -122,29 +122,29 @@ public class PostProvider {
         ResultSet resultSet = null;
 
 
-            try {
-                PreparedStatement getPostByOwnerIdStmt = DBManager.getConnection().
-                        prepareStatement("SELECT * FROM posts WHERE user_id = ?");
+        try {
+            PreparedStatement getPostByOwnerIdStmt = DBManager.getConnection().
+                    prepareStatement("SELECT * FROM posts WHERE user_id = ?");
 
-                resultSet = getPostByOwnerIdStmt.executeQuery();
+            resultSet = getPostByOwnerIdStmt.executeQuery();
 
 
-                while (resultSet.next()){
-                   Post post = new Post(
-                            resultSet.getInt("post_id"),
-                            resultSet.getTimestamp("created"),
-                            new User(resultSet.getInt("user_id")),
-                            resultSet.getString("content"),
-                            new Event(resultSet.getInt("event_id")),
-                            new Post(resultSet.getInt("parent_id"))
-                    );
+            while (resultSet.next()) {
+                Post post = new Post(
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")),
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")),
+                        new Post(resultSet.getInt("parent_id"))
+                );
 
-                   posts.add(post);
+                posts.add(post);
 
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return posts;
     }
 

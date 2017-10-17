@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Event {
 
     private int id;
+    private String titel;
     private Timestamp created;
     private User owner;
     private Timestamp startDate;
@@ -17,8 +18,9 @@ public class Event {
     private ArrayList<User> participants;
     private ArrayList<Post> posts;
 
-    public Event(int id, Timestamp created, User owner, Timestamp startDate, Timestamp endDate, String description) {
+    public Event(int id, String titel, Timestamp created, User owner, Timestamp startDate, Timestamp endDate, String description) {
         this.id = id;
+        this.titel = titel;
         this.created = created;
         this.owner = owner;
         this.startDate = startDate;
