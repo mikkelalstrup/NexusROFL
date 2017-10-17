@@ -30,6 +30,16 @@ public class Event {
         this.participants = new ArrayList<User>();
         this.posts = new ArrayList<Post>();
     }
+
+    //This constructor should be used when creating a new event in the database
+    public Event(int owner_id, String title, Timestamp startDate, Timestamp endDate, String description) {
+        this.owner = new User(owner_id);
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+    }
+
     // This constructor is used to ONLY get the id of the event
     public Event(int id) {
         this.id = id;
@@ -57,6 +67,10 @@ public class Event {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public ArrayList<User> getParticipants() {
