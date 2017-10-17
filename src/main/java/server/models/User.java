@@ -20,6 +20,11 @@ public class User {
     private ArrayList<Event> events;
     private ArrayList<Post> posts;
 
+    public User (){
+        this.events = new ArrayList<Event>();
+        this.posts = new ArrayList<Post>();
+    }
+
     public User(String password, String salt, String firstName) {
         this.id = id;
         this.password = password;
