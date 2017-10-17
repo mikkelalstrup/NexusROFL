@@ -7,15 +7,4 @@ import server.models.Post;
  */
 public class ContentController {
 
-    public Post validatePostInformation(Post jsonPost) {
-
-
-        if (jsonPost.getEvent().getId() < 0 || jsonPost.getParent().getId() < 0){
-            throw new IllegalArgumentException();
-        }
-        if (jsonPost.getEvent() == null) {
-
-        }
-        return jsonPost;
-    }
 }

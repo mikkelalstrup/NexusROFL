@@ -53,33 +53,40 @@ public class PostEndpoint {
         int localEvent = 0;
         int localParent = 0;
 
-        postData.get("owner").getAsInt();
-        postData.get("content").getAsString();
+        localOwner = postData.get("owner").getAsInt();
+        localContent = postData.get("content").getAsString();
+
 
         try {
-            postData.get("event").getAsInt();
+            localEvent = postData.get("event").getAsInt();
         }
         catch (NullPointerException e){
             localEvent = 0;
-            try {
-                postData.get("parent").getAsInt();
-            }
-            catch (NullPointerException e2){
-                localParent = 0;
-            }
+
+        }
+
+        try {
+            localParent = postData.get("parent").getAsInt();
+        }
+        catch (NullPointerException e2){
+            localParent = 0;
         }
 
         if (localEvent < 0 || localParent < 0 ){
             throw new IllegalArgumentException("Event og Parent Id can't be less than 0");
         }
 
+        if (localParent != 0){
+            localEvent = 0;
+        }
 
-        Post post123 = new Post(postData.get("owner").getAsInt(), postData.get("content").getAsString(), localEvent, localParent);
+
+        Post createdPost = new Post(localOwner, localContent, localEvent, localParent);
 
         PostProvider postProvider = new PostProvider();
 
         try {
-           postProvider.createPost(post123);
+           postProvider.createPost(createdPost);
             return Response.status(201).type("text/plain").entity("Post created").build();
         }
         catch (SQLException e){
@@ -90,28 +97,4 @@ public class PostEndpoint {
 
     }
 
-    /*
-    public Response createPostMethod(
-
-
-            @FormParam("owner") int owner,
-            @FormParam("content") String content,
-            @DefaultValue("0") @FormParam("event") int event,
-            @DefaultValue("0") @FormParam("parent") int parent) {
-
-
-
-        Post post = new Post(owner, content, event, parent);
-
-        try {
-            post.setId(postProvider.createPost(post));
-
-            return Response.status(201).type("text/plain").entity("Post created").build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Response.status(400).type("text/plain").entity("Could not create post").build();
-        }
-
-    }
-    */
 }
