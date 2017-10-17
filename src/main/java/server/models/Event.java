@@ -29,6 +29,10 @@ public class Event {
         this.posts = new ArrayList<Post>();
     }
 
+    public Event(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
