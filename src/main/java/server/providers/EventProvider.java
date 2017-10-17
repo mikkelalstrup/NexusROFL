@@ -38,12 +38,12 @@ public class EventProvider {
             while (resultSet.next()) {
                 Event event = new Event(
                         resultSet.getInt("event_id"),
-                        resultSet.getString("titel"),
+                        resultSet.getString("title"),
                         resultSet.getTimestamp("created"),
-                        new User(resultSet.getInt("owner")),
-                        resultSet.getTimestamp("startDate"),
-                        resultSet.getTimestamp("endData"),
-                        resultSet.getString("Description"));
+                        new User(resultSet.getInt("owner_id")),
+                        resultSet.getTimestamp("start"),
+                        resultSet.getTimestamp("end"),
+                        resultSet.getString("description"));
 
                 allEvents.add(event);
 
