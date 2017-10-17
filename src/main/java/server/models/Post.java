@@ -1,6 +1,7 @@
 package server.models;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  * Created by Filip on 10-10-2017.
@@ -14,6 +15,8 @@ public class Post {
     private Event event;
     private Post parent;
 
+
+
     public Post(int id, Timestamp created, User owner, String content, Event event, Post parent) {
         this.id = id;
         this.created = created;
@@ -21,6 +24,11 @@ public class Post {
         this.content = content;
         this.event = event;
         this.parent = parent;
+    }
+
+    //use this constructor for fetching ONLY the id of the post
+    public Post(int id) {
+        this.id = id;
     }
 
     public int getId() {

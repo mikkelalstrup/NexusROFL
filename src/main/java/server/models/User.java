@@ -51,6 +51,11 @@ public class User {
         this.posts = new ArrayList<Post>();
     }
 
+    // This constructor is used to create EMPTY users with ID only
+    public User(int id) {
+        this.id = id;
+    }
+
     //Setters
     public void setId(int id) {
         this.id = id;
