@@ -113,6 +113,9 @@ public class PostProvider {
         return post.getId();
     }
 
+    /*
+    This method makes it possible to get all post from a specific user_id
+     */
     public ArrayList<Post> getPostByOwnerId() {
         ArrayList<Post> posts = new ArrayList<>();
 
