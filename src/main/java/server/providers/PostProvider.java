@@ -1,5 +1,6 @@
 package server.providers;
 
+import server.models.Event;
 import server.models.Post;
 import server.models.User;
 import server.util.DBManager;
@@ -16,37 +17,37 @@ import java.util.ArrayList;
 public class PostProvider {
 
     public ArrayList<Post> getAllPosts() {
-        ArrayList<Post> getAllPosts = new ArrayList<>();
+        ArrayList<Post> allPosts = new ArrayList<>();
 
         ResultSet resultSet = null;
 
+        PreparedStatement getAllPostsStmt = null;
         try {
-            PreparedStatement getAllPostsStmt = null;
-            try {
-                getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+            getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts");
 
             resultSet = getAllPostsStmt.executeQuery();
 
-            while (resultSet.next()){
+
+             while (resultSet.next()){
                 Post post = new Post(
-                        resultSet.getInt("id");
-                        resultSet.getTimestamp("created");
-                        new User(resultSet.getInt("owner"));
-                        resultSet.getString("content");
-                        new Event(resultSet.getInt("event_id");
-                        new Post(resultSet.getInt("parent_id"));
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")),
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")),
+                        new Post(resultSet.getInt("parent_id"))
+                        );
 
+                allPosts.add(post);
 
-
-                }
-
-            }
-            return getAllPosts.Post();
+             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    }
 
+        return allPosts;
+
+        }
 }
+
+
