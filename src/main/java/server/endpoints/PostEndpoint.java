@@ -14,6 +14,7 @@ import server.providers.PostProvider;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+
 import java.sql.*;
 
 
@@ -31,12 +32,12 @@ public class PostEndpoint {
     Return response converts the arraylist getAllPosts from GSON to JSON.
      */
     @GET
-    public Response getAllPosts(){
+    public Response getAllPosts() {
 
         PostProvider postProvider = new PostProvider();
         ArrayList<Post> allPosts = postProvider.getAllPosts();
         return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
-
+    }
 
 
     @POST
