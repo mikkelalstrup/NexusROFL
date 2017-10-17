@@ -35,6 +35,14 @@ public class UserEndpoint {
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
     }
+
+    @GET
+    public Response getUser(){
+
+        User user = userProvider.getUser();
+
+        return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
+    }
   
   
     /**
