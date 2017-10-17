@@ -1,14 +1,15 @@
 package server.endpoints;
 
-import server.controllers.UserController;
+
+import com.google.gson.Gson;
 import server.models.User;
 import server.providers.UserProvider;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+
+import server.controllers.UserController;
 
 import java.sql.SQLException;
 
@@ -17,15 +18,25 @@ import java.sql.SQLException;
  *
  * This is our user endpoint, which handles the input given from the client regarding user-creation.
  */
-
-@Path("/users/")
+@Path("/users")
 public class UserEndpoint {
+  
     /**
      * Instantiating userProvider and userController so they can be used throughout UserEndpoint.java
      */
     UserProvider userProvider = new UserProvider();
     UserController userController = new UserController();
+  
+    @GET
+    public Response getAllUsers(){
 
+        ArrayList<User> allUsers = userProvider.getAllUsers();
+
+        return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
+
+    }
+  
+  
     /**
      * This method lets the client create a new user. The parameters catches the specific input from the client.
      * The Endpoint creates a User object using the parameters stated below.
@@ -42,6 +53,7 @@ public class UserEndpoint {
      * @param semester
      * @return
      */
+
     @POST
     @Consumes("application/x-www-form-urlencoded")
     public Response createUserMethod(

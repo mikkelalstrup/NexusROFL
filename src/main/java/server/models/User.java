@@ -14,9 +14,9 @@ public class User {
     private String lastName;
     private String email;
     private String description;
-    private char gender;
+    private Character gender;
     private String major;
-    private int semester;
+    private Integer semester;
     private ArrayList<Event> events;
     private ArrayList<Post> posts;
 
@@ -52,6 +52,21 @@ public class User {
         this.major = major;
         this.semester = semester;
 
+        this.events = new ArrayList<Event>();
+        this.posts = new ArrayList<Post>();
+    }
+
+
+    // Use this constructor when getting users from the database -> Does not contain password and salt
+    public User(int id, String firstName, String lastName, String email, String description, char gender, String major, int semester) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.description = description;
+        this.gender = gender;
+        this.major = major;
+        this.semester = semester;
         this.events = new ArrayList<Event>();
         this.posts = new ArrayList<Post>();
     }
