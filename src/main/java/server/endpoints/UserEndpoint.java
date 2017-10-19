@@ -28,6 +28,7 @@ public class UserEndpoint {
     //Creates object of the two classes UserProvider and UserController
     UserProvider userProvider = new UserProvider();
     UserController userController = new UserController();
+//    AuthenticationFilter authenticationFilter = new AuthenticationFilter();
     Log log = new Log();
 
     String userEmail = "Test@Test.com";
@@ -38,6 +39,7 @@ public class UserEndpoint {
 
     Return response converts the ArrayList "allUsers" from GSON to JSON
      */
+    @Secured
     @GET
     public Response getAllUsers() {
 
@@ -47,7 +49,7 @@ public class UserEndpoint {
         } catch (SQLException e) {
 
             log.writeLog("DB",this.getClass(),"An SQL exception occurred while running getAllUsers",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+            log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),1);
 
             e.printStackTrace();
             return Response.status(500).build();
@@ -56,8 +58,8 @@ public class UserEndpoint {
         //log.writeLog(this.getClass().getName(),this.getClass(),("An IllegalArguement exception occurred while running createUser"
        //         + "User active was: " + userEmail + "\n"),1);
 
-           log.writeLog(this.getClass().getName(),this.getClass(),("getAllUsers was successful - " + "User active was: " + userEmail),0);
-        //  log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
+           log.writeLog(this.getClass().getName(),this.getClass(),("getAllUsers was successful - " + "User active was: " + AuthenticationFilter.userEmailByToken),0);
+        //  log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
@@ -69,7 +71,7 @@ public class UserEndpoint {
      * @return The method returns a response that converts the "user" from GSON to JSON.
      */
 
-    //@Secured
+    @Secured
     @GET
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id){
@@ -90,14 +92,14 @@ public class UserEndpoint {
         } catch (SQLException e) {
 
             log.writeLog("DB",this.getClass(),"An SQL exception occurred while running getUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+            log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),1);
 
             e.printStackTrace();
             return Response.status(500).build();
         }
 
         log.writeLog("DB",this.getClass(),"getUser was successful",0);
-        log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
+        log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
@@ -108,7 +110,7 @@ public class UserEndpoint {
      * The User object is validated in UserController to makes that it is fitted for the database
      * The Endpoint throws 3 different Reponses, Statuscode: 201 (Succesful user creation), 400 (Wrong input by client), 501 (Database Error).
      */
-    //@Secured
+    @Secured
     @POST
     public Response createUser(String jsonUser) {
 
@@ -118,7 +120,7 @@ public class UserEndpoint {
         } catch (IllegalArgumentException e) {
 
             log.writeLog("DB",this.getClass(),"An IllegalArguement exception occurred while running createUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+            log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),1);
 
             System.out.print(e.getMessage());
             return Response.status(400).build();
@@ -136,7 +138,7 @@ public class UserEndpoint {
         } catch (IllegalArgumentException exception) {
 
             log.writeLog("DB",this.getClass(),("An IllegalArguement exception occurred while running createUser"
-                    + "User active was: " + userEmail + "\n"),1);
+                    + "User active was: " + AuthenticationFilter.userEmailByToken + "\n"),1);
 
             System.out.println(exception.getMessage());
             return Response.status(400).build();
@@ -146,19 +148,23 @@ public class UserEndpoint {
         } catch (SQLException e) {
 
             log.writeLog("DB",this.getClass(),"A SQL exception occurred while running createUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+            log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),1);
 
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
 
         log.writeLog("DB",this.getClass(),"createUser was successful",0);
-        log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
+        log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(201).type("text/plain").entity("User Created").build();
         
         }
 
+        public void SetTemporaryEmailByToken (String emailInToken){
+            this.userEmail = emailInToken;
+    }
+/*
         //@Secured
         @DELETE
         @Path("{id}")
@@ -184,7 +190,7 @@ public class UserEndpoint {
 
             return Response.status(200).type("text/plain").entity("User was deleted").build();
         }
-
+        */
 }
 
 
