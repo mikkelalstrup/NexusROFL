@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import server.models.User;
 import server.providers.UserProvider;
 import server.util.Auth;
+import server.util.Config;
 
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -43,7 +44,7 @@ public class AuthEndpoint {
 
       if (checkHashed.equals(foundUser.getPassword())) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256("secret");
+            Algorithm algorithm = Algorithm.HMAC256(Config.getJwtSecret());
             long timevalue;
             timevalue = (System.currentTimeMillis()*1000)+20000205238L;
             Date expDate = new Date(timevalue);
