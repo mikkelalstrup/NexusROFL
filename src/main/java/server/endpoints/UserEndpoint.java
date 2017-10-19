@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 import server.controllers.UserController;
+import server.util.Log;
 
 
 import java.sql.SQLException;
@@ -27,6 +28,9 @@ public class UserEndpoint {
     //Creates object of the two classes UserProvider and UserController
     UserProvider userProvider = new UserProvider();
     UserController userController = new UserController();
+    Log log = new Log();
+
+    String userEmail = "Test@Test.com";
 
     /*
     This method returns all users. To do so, the method creates an object of the UserProvider class
@@ -41,9 +45,19 @@ public class UserEndpoint {
         try {
             allUsers = userProvider.getAllUsers();
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),"An SQL exception occurred while running getAllUsers",1);
+            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        //log.writeLog(this.getClass().getName(),this.getClass(),("An IllegalArguement exception occurred while running createUser"
+       //         + "User active was: " + userEmail + "\n"),1);
+
+           log.writeLog(this.getClass().getName(),this.getClass(),("getAllUsers was successful - " + "User active was: " + userEmail),0);
+        //  log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
@@ -74,9 +88,16 @@ public class UserEndpoint {
             user.getPosts().addAll(postProvider.getPostByUserId(user_id));
 
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),"An SQL exception occurred while running getUser",1);
+            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        log.writeLog("DB",this.getClass(),"getUser was successful",0);
+        log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
@@ -95,6 +116,10 @@ public class UserEndpoint {
         try {
             createdUser = new Gson().fromJson(jsonUser, User.class);
         } catch (IllegalArgumentException e) {
+
+            log.writeLog("DB",this.getClass(),"An IllegalArguement exception occurred while running createUser",1);
+            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+
             System.out.print(e.getMessage());
             return Response.status(400).build();
         }
@@ -109,15 +134,26 @@ public class UserEndpoint {
                     createdUser.getLastName(), createdUser.getEmail(), createdUser.getGender(),
                     createdUser.getDescription(), createdUser.getMajor(), createdUser.getSemester());
         } catch (IllegalArgumentException exception) {
+
+            log.writeLog("DB",this.getClass(),("An IllegalArguement exception occurred while running createUser"
+                    + "User active was: " + userEmail + "\n"),1);
+
             System.out.println(exception.getMessage());
             return Response.status(400).build();
         }
         try {
             userProvider.createUser(createdUser);
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),"A SQL exception occurred while running createUser",1);
+            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
+
+        log.writeLog("DB",this.getClass(),"createUser was successful",0);
+        log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
 
         return Response.status(201).type("text/plain").entity("User Created").build();
         
@@ -136,10 +172,15 @@ public class UserEndpoint {
             }
             catch (Exception e){
                 e.printStackTrace();
+
+                log.writeLog("DB",this.getClass(),"A exception occurred while running deleteUser",1);
+                log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+
                 return Response.status(400).build();
             }
 
-
+            log.writeLog("DB",this.getClass(),"deleteUser was successful",0);
+            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
 
             return Response.status(200).type("text/plain").entity("User was deleted").build();
         }
