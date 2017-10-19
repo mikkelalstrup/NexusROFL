@@ -43,11 +43,12 @@ public class EventEndpoint {
     EventProvider eventProvider = new EventProvider();
     ContentController contentController = new ContentController();
 
-    /*
-    This method returns all events. To do so, the method creates an object of the EventProvider-class
-    and inserts this object in an arraylist along with the user from the models-package.
 
-    Return response converts the arraylist allEvents from GSON to JSON
+    /*
+    This method returns all events. To do so, the method creates an object of the EventProvider class
+    and inserts this object in an ArrayList along with the user from the models package.
+
+    The method return response status codes and converts the ArrayList "allEvents" from GSON to JSON
      */
     @GET
     public Response getAllEvents(){
@@ -69,10 +70,20 @@ public class EventEndpoint {
 
     }
 
+
+    /** This method returns one event chosen by the specific id for the event. The method creates objects of the classes EventProvider,
+     * PostProvider and UserController and inserts the object for the class EventProvider in the ArrayList "Event".
+     *
+     * @param event_id
+     *
+     * @return It returns a response that converts the ArrayList from GSON to JSON
+     */
+
     //@Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
+
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
         UserController userController = new UserController();
@@ -95,6 +106,11 @@ public class EventEndpoint {
 
     }
 
+    /**
+     *
+     * @param eventJson
+     * @return It returns a response with a status code 200.
+     */
     @POST
     public Response createEvent(String eventJson) {
 
@@ -107,9 +123,10 @@ public class EventEndpoint {
                 Timestamp.valueOf(eventData.get("endDate").getAsString()),
                 eventData.get("description").getAsString()
         );
-
+        //Creates an object of the class EventProvider
         EventProvider eventProvider = new EventProvider();
 
+        //Creating try-catch method and if it fails to create an event, it throws and SQL exception
         try {
             /**
              * validateEventInput is called to make sure the timestamp for event equals or is after current time.
@@ -135,6 +152,12 @@ public class EventEndpoint {
 
     }
 
+    /** This method lets the user subscribe to a specific event.
+     * The method converts from JSON to GSON
+     *
+     * @param jsonData
+     * @return It returns a response with a status code 200.
+     */
     @POST
     @Path("/subscribe")
     public Response subscribeToEvent(String jsonData){
@@ -143,6 +166,7 @@ public class EventEndpoint {
         int user_id = jsonObj.get("user_id").getAsInt();
         int event_id = jsonObj.get("event_id").getAsInt();
 
+        //Creates an object of the class EventProvider
         EventProvider eventProvider = new EventProvider();
 
         try {
