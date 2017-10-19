@@ -18,6 +18,7 @@ public class Post {
     private ArrayList<Post> comments;
 
 
+    //This constructor should be used when creating a new post in the database
 
     public Post(int id, Timestamp created, User owner, String content, Event event, Post parent) {
         this.id = id;
@@ -31,7 +32,7 @@ public class Post {
     }
 
 
-    //use this constructor for fetching ONLY the id of the post
+    //Use this constructor for fetching ONLY the id of the post
 
     public Post(int owner, String content, int event, int parent) {
         this.owner = new User(owner);
@@ -41,6 +42,7 @@ public class Post {
         this.comments = new ArrayList<Post>();
     }
 
+    //Use this constructor for adding comments to the Post ArrayList.
 
     public Post(int id) {
         this.id = id;
@@ -48,6 +50,7 @@ public class Post {
     }
 
 
+    //Getters and setters for post variables.
 
     public void setId(int id) {this.id = id; }
 
