@@ -54,7 +54,7 @@ public class PostEndpoint {
 
 
     @POST
-    public Response createPostMethod (String jsonPost) {
+    public Response createPost (String jsonPost) {
 
         JsonObject postData = new Gson().fromJson(jsonPost, JsonObject.class);
 
@@ -95,6 +95,18 @@ public class PostEndpoint {
 
         PostProvider postProvider = new PostProvider();
 
+        /**
+         * ValidatePostInput is called to make sure, that the post content is not empty.
+         */
+        try{
+            createdPost = contentController.validatePostCreation(createdPost.getId(), createdPost.getCreated(),
+                    createdPost.getOwner(), createdPost.getContent(),
+                    createdPost.getEvent(),createdPost.getParent());
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            return Response.status(400).build();
+        }
+
         try {
            postProvider.createPost(createdPost);
         }
@@ -104,6 +116,7 @@ public class PostEndpoint {
         }
 
         return Response.status(201).type("text/plain").entity("Post created").build();
+
 
     }
 

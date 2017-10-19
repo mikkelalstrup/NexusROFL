@@ -31,26 +31,34 @@ public class PostProvider {
 
         PreparedStatement getAllPostsStmt = null;
 
-        getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts");
+        try {
+            getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE parent_id is null ");
 
-        resultSet = getAllPostsStmt.executeQuery();
+            resultSet = getAllPostsStmt.executeQuery();
 
 
-        /*
-        Getting all variables from the model class Post
-        and adding all posts to the ArrayList
-         */
-        while (resultSet.next()) {
-            Post post = new Post(
-                    resultSet.getInt("post_id"),
-                    resultSet.getTimestamp("created"),
-                    new User(resultSet.getInt("user_id")),
-                    resultSet.getString("content"),
-                    new Event(resultSet.getInt("event_id")),
-                    new Post(resultSet.getInt("parent_id"))
-            );
+            /*
+            Getting all variables from the model class Post
+            and adding all posts to the ArrayList
+             */
+            while (resultSet.next()) {
+                Post post = new Post(
+                        resultSet.getInt("post_id"),
+                        resultSet.getTimestamp("created"),
+                        new User(resultSet.getInt("user_id")),
+                        resultSet.getString("content"),
+                        new Event(resultSet.getInt("event_id")),
+                        new Post(resultSet.getInt("parent_id"))
+                );
 
-            allPosts.add(post);
+                allPosts.add(post);
+
+            }
+            resultSet.close();
+            getAllPostsStmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
 
         }
         resultSet.close();

@@ -40,6 +40,8 @@ import java.util.Properties;
 @Path("/events")
 public class EventEndpoint {
 
+    EventProvider eventProvider = new EventProvider();
+    ContentController contentController = new ContentController();
 
     /*
     This method returns all events. To do so, the method creates an object of the EventProvider-class
@@ -60,9 +62,14 @@ public class EventEndpoint {
             return Response.status(500).build();
         }
 
+
+
         return Response.status(200).type("text/plain").entity(new Gson().toJson(allEvents)).build();
+
+
     }
 
+    //@Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
@@ -104,13 +111,26 @@ public class EventEndpoint {
         EventProvider eventProvider = new EventProvider();
 
         try {
-            eventProvider.createEvent(event);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Response.status(500).build();
+            /**
+             * validateEventInput is called to make sure the timestamp for event equals or is after current time.
+             * This way you can't create an event that happens before current time.
+             */
+
+            event = contentController.validateEventCreation(event.getId(), event.getTitle(),
+                    event.getCreated(), event.getOwner(), event.getStartDate(),
+                    event.getEndDate(),event.getDescription());
+        }catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            return Response.status(400).build();
         }
 
-        return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
+        try {
+            eventProvider.createEvent(event);
+        }catch (SQLException e){
+            return Response.status(501).type("text/plain").entity("Server could not store the validated event object (SQL Error) ").build();
+        }
+
+        return Response.status(201).type("text/plain").entity("Event Created").build();
 
 
     }

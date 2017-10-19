@@ -83,14 +83,17 @@ public class UserProvider {
         PreparedStatement getUserByEmailStmt = DBManager.getConnection().prepareStatement
                 ("SELECT * FROM users WHERE email = ?");
 
-        getUserByEmailStmt.setString(1, email);
-        resultSet = getUserByEmailStmt.executeQuery();
-        while(resultSet.next()){
-            user = new User(
-                    resultSet.getString("email"),
-                    resultSet.getString("salt"),
-                    resultSet.getString("password")
-            );
+            getUserByEmailStmt.setString(1, email);
+            resultSet = getUserByEmailStmt.executeQuery();
+            while(resultSet.next()){
+                user = new User(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("email"),
+                        resultSet.getString("salt"),
+                        resultSet.getString("password")
+                );
+
+            }
 
         }
 

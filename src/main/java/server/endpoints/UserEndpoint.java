@@ -47,7 +47,7 @@ public class UserEndpoint {
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
     }
-
+    //@Secured
     @GET
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id){
@@ -78,7 +78,7 @@ public class UserEndpoint {
      * The User object is validated in UserController to makes that it is fitted for the database
      * The Endpoint throws 3 different Reponses, Statuscode: 201 (Succesful user creation), 400 (Wrong input by client), 501 (Database Error).
      */
-
+    //@Secured
     @POST
     public Response createUser(String jsonUser) {
         User createdUser;
@@ -112,5 +112,30 @@ public class UserEndpoint {
         return Response.status(201).type("text/plain").entity("User Created").build();
         
         }
-    }
+
+        //@Secured
+        @DELETE
+        @Path("{id}")
+        public Response deleteUser(String jsonDeleteId){
+            User userToDelete;
+
+            try {
+
+                userToDelete = new Gson().fromJson(jsonDeleteId, User.class);
+                userProvider.getAllUsers();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return Response.status(400).build();
+            }
+
+
+
+            return Response.status(200).type("text/plain").entity("User was deleted").build();
+        }
+
+}
+
+
+
 
