@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 import server.controllers.UserController;
+import server.util.Log;
 
 
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ public class UserEndpoint {
     //Creates object of the two classes UserProvider and UserController
     UserProvider userProvider = new UserProvider();
     UserController userController = new UserController();
+    Log log = new Log();
 
     /*
     This method returns all users. To do so, the method creates an object of the UserProvider class
@@ -36,6 +38,8 @@ public class UserEndpoint {
      */
     @GET
     public Response getAllUsers() {
+
+        log.writeLog("DB","DBManager","WORKS",2);
 
         ArrayList<User> allUsers = null;
         try {
