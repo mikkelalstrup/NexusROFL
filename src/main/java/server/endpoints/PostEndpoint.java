@@ -42,13 +42,19 @@ public class PostEndpoint {
     public Response getAllPosts() {
 
         PostProvider postProvider = new PostProvider();
-        ArrayList<Post> allPosts = postProvider.getAllPosts();
+        ArrayList<Post> allPosts = null;
+        try {
+            allPosts = postProvider.getAllPosts();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
         return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
     }
 
 
     @POST
-    public Response createPostMethod (String jsonPost) {
+    public Response createPost (String jsonPost) {
 
         JsonObject postData = new Gson().fromJson(jsonPost, JsonObject.class);
 
@@ -89,15 +95,28 @@ public class PostEndpoint {
 
         PostProvider postProvider = new PostProvider();
 
+        /**
+         * ValidatePostInput is called to make sure, that the post content is not empty.
+         */
+        try{
+            createdPost = contentController.validatePostCreation(createdPost.getId(), createdPost.getCreated(),
+                    createdPost.getOwner(), createdPost.getContent(),
+                    createdPost.getEvent(),createdPost.getParent());
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            return Response.status(400).build();
+        }
+
         try {
            postProvider.createPost(createdPost);
-            return Response.status(201).type("text/plain").entity("Post created").build();
         }
         catch (SQLException e){
-            System.out.println("TESTATA");
             e.printStackTrace();
             return Response.status(400).type("text/plain").entity("Could not create post").build();
         }
+
+        return Response.status(201).type("text/plain").entity("Post created").build();
+
 
     }
 
@@ -112,10 +131,17 @@ public class PostEndpoint {
     @Path("{id}")
     public Response getPost(@PathParam("id") int post_id) {
         PostProvider postProvider = new PostProvider(); //Creates an object
+        Post post;
 
-        Post post = postProvider.getPost(post_id);
+        try {
+            post = postProvider.getPost(post_id);
 
-        post.getComments().addAll(postProvider.getPostsByParentId(post_id));
+            post.getComments().addAll(postProvider.getPostsByParentId(post_id));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
 

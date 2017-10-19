@@ -4,6 +4,7 @@ import server.models.User;
 import server.providers.EventProvider;
 import server.providers.UserProvider;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -94,7 +95,7 @@ public class UserController {
         }
     }
 
-    public ArrayList<User> getParticipants(int event_id){
+    public ArrayList<User> getParticipants(int event_id) throws SQLException{
 
         EventProvider eventProvider = new EventProvider();
         UserProvider userProvider = new UserProvider();

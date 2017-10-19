@@ -80,121 +80,110 @@ public class UserProvider {
 
     }
 
+
     //Creating an method that returns a user by it's email
-    public User getUserByEmail(String email){
+    public User getUserByEmail(String email) throws SQLException{
         User user = null;
 
         ResultSet resultSet = null;
-        //Creating a prepared statement for getting user by email
-        try {
-            PreparedStatement getUserByEmailStmt = DBManager.getConnection().prepareStatement
-                    ("SELECT * FROM users WHERE email = ?");
+
+        PreparedStatement getUserByEmailStmt = DBManager.getConnection().prepareStatement
+                ("SELECT * FROM users WHERE email = ?");
 
             getUserByEmailStmt.setString(1, email);
             resultSet = getUserByEmailStmt.executeQuery();
             while(resultSet.next()){
                 user = new User(
+                        resultSet.getInt("user_id"),
                         resultSet.getString("email"),
                         resultSet.getString("salt"),
                         resultSet.getString("password")
                 );
 
             }
-            //If the user doesn't have a value an exception will be thrown
-            if(user == null){
-                throw new IllegalArgumentException();
-            }
-            //Closing query
-            resultSet.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if(user == null){
+            throw new IllegalArgumentException();
         }
-        //Returns user by email
+
+        resultSet.close();
+
+        getUserByEmailStmt.close();
+
         return user;
     }
 
-    //PreparedStatement for getting all users ordered by id from DB cafe_nexus
-    public ArrayList<User> getAllUsers() {
+    //PreparedStatetement for getting all users ordered by id from DB cafe_nexus
+    public ArrayList<User> getAllUsers() throws SQLException {
+
         ArrayList<User> allUsers = new ArrayList<>();
 
         ResultSet resultSet = null;
 
-        try {
-            PreparedStatement getAllUsersStmt = DBManager.getConnection().
-                    prepareStatement("SELECT * FROM users ORDER BY user_id");
+        PreparedStatement getAllUsersStmt = DBManager.getConnection().
+                prepareStatement("SELECT * FROM users ORDER BY user_id");
 
 
-            resultSet = getAllUsersStmt.executeQuery();
-    /*
-    Getting variables from Models_User class
-    and adding users to ArrayList
-     */
-            while(resultSet.next()){
-                User user = new User(
-                        resultSet.getInt("user_id"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),
-                        resultSet.getString("email"),
-                        resultSet.getString("description"),
-                        resultSet.getString("gender").charAt(0),
-                        resultSet.getString("major"),
-                        resultSet.getInt("semester"));
+        resultSet = getAllUsersStmt.executeQuery();
+        /*
+        Getting variables from Models.User class
+        and adding users to ArrayList
+         */
+        while(resultSet.next()){
+            User user = new User(
+                    resultSet.getInt("user_id"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("description"),
+                    resultSet.getString("gender").charAt(0),
+                    resultSet.getString("major"),
+                    resultSet.getInt("semester"));
 
-                allUsers.add(user);
-            }
-
-            //Closing query
-            resultSet.close();
-
-            getAllUsersStmt.close();
-
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            allUsers.add(user);
         }
-        //Returns all users by it's id
+
+
+        resultSet.close();
+
+        getAllUsersStmt.close();
+
         return allUsers;
     }
 
+    /*
+    Get user by user_id
+     */
+    public User getUser(int user_id) throws SQLException{
 
-    //Creating method for getting a specific user by it's user_id
-    public User getUser(int user_id){
         User user = null;
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
 
         ResultSet resultSet = null;
 
-                try {
-            PreparedStatement getUserStmt = DBManager.getConnection()
-                    .prepareStatement("SELECT * FROM users WHERE user_id = ?");
+        PreparedStatement getUserStmt = DBManager.getConnection()
+                .prepareStatement("SELECT * FROM users WHERE user_id = ?");
 
-            getUserStmt.setInt(1, user_id);
+        getUserStmt.setInt(1, user_id);
 
-            resultSet = getUserStmt.executeQuery();
+        resultSet = getUserStmt.executeQuery();
 
-                while(resultSet.next()){
-                    user = new User(
-                            resultSet.getInt("user_id"),
-                            resultSet.getString("first_name"),
-                            resultSet.getString("last_name"),
-                            resultSet.getString("email"),
-                            resultSet.getString("password"),
-                            resultSet.getString("salt"),
-                            resultSet.getString("description"),
-                            resultSet.getString("gender").charAt(0),
-                            resultSet.getString("major"),
-                            resultSet.getInt("semester")
-                    );
-                }
+            while(resultSet.next()){
+                user = new User(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password"),
+                        resultSet.getString("salt"),
+                        resultSet.getString("description"),
+                        resultSet.getString("gender").charAt(0),
+                        resultSet.getString("major"),
+                        resultSet.getInt("semester")
+                );
+            }
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                //Return a user with it's user_id
             return user;
     }
-
 }
