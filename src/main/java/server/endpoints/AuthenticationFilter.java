@@ -8,6 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
+import server.util.Config;
 
 
 import javax.annotation.Priority;
@@ -67,7 +68,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     try {
 
 
-        Algorithm algorithm = Algorithm.HMAC256("secret");
+        Algorithm algorithm = Algorithm.HMAC256(Config.getJwtSecret());
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("ROFL").build();
 
