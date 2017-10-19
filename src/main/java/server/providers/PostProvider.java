@@ -18,20 +18,27 @@ import java.util.ArrayList;
 
 
 /**
- * Created by Filip on 10-10-2017.
+ *  The purpose of this class is to communicate and making requests to the tables posts
+ *  in the DB cafe_nexus. This class contains prepared statements and communicates
+ *  with the Post-class in the package models for getting the variables for a post.
+ *  A post can both be an event and a comment. Notice a parent_id
+ *
+ *
+ *
  */
 public class PostProvider {
 
+    // PreparedStatement for getting all posts from posts in DB cafe_nexus
+    public ArrayList<Post> getAllPosts() throws SQLException{
 
-    //PreparedStatement for getting all posts from posts.
-    public ArrayList<Post> getAllPosts() {
         ArrayList<Post> allPosts = new ArrayList<>();
 
         ResultSet resultSet = null;
 
         PreparedStatement getAllPostsStmt = null;
+
         try {
-            getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts");
+            getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE parent_id is null ");
 
             resultSet = getAllPostsStmt.executeQuery();
 
@@ -52,13 +59,18 @@ public class PostProvider {
 
                 allPosts.add(post);
 
-            }
+            } //Closing query
             resultSet.close();
             getAllPostsStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
+
+        //Returning all posts
+        resultSet.close();
+        getAllPostsStmt.close();
 
         return allPosts;
 
@@ -114,155 +126,153 @@ public class PostProvider {
         return post.getId();
     }
 
-
     //Creating method for getting one post
-    public Post getPost(int post_id) {
+    public Post getPost(int post_id) throws SQLException{
         Post post = null;
 
         ResultSet resultSet = null;
 
         //Creating prepared statement for getting one post
         PreparedStatement getOnePostStatement = null;
-        try {
-            getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE post_id = ?");
 
-            getOnePostStatement.setInt(1, post_id);
+        getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE post_id = ?");
 
-            resultSet = getOnePostStatement.executeQuery();
+        getOnePostStatement.setInt(1, post_id);
 
-            while (resultSet.next()) {
-                post = new Post(
-                        resultSet.getInt("post_id"),
-                        resultSet.getTimestamp("created"),
-                        new User(resultSet.getInt("user_id")), //Creating an owner to the post
-                        resultSet.getString("content"),
-                        new Event(resultSet.getInt("event_id")), //Creating an event to the post
-                        new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
-                );
+        resultSet = getOnePostStatement.executeQuery();
 
-            } //Closing query
-            resultSet.close();
-            getOnePostStatement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (resultSet.next()) {
+            post = new Post(
+                    resultSet.getInt("post_id"),
+                    resultSet.getTimestamp("created"),
+                    new User(resultSet.getInt("user_id")), //Creating an owner to the post
+                    resultSet.getString("content"),
+                    new Event(resultSet.getInt("event_id")), //Creating an event to the post
+                    new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
+            );
 
-        } //Returning one post
+        }
+
+        //Closing query
+        resultSet.close();
+        getOnePostStatement.close();
+
+        //Returning one post
         return post;
 
     }
 
 
-    /**Creating a method that gets all comments from one post by cheching if the post has a parent_id
+    /**Creating a method that gets all comments from one post by checking if the post has a parent_id
      *
      * @param parent_id
      * @return The method returns an ArrayList that contains all the comments to one post
      */
-    public ArrayList<Post> getPostsByParentId(int parent_id) {
+    public ArrayList<Post> getPostsByParentId(int parent_id) throws SQLException {
 
-        // Creating an object of the Arraylist
+        // Creating an object of the Arraylist and creating a prepared statement for getting all comments
         ArrayList<Post> allComments = new ArrayList<>();
         ResultSet resultSet = null;
 
         PreparedStatement getAllCommentsStatement = null;
 
-        try {
-            getAllCommentsStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE parent_id = ?");
+        getAllCommentsStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE parent_id = ?");
 
-            getAllCommentsStatement.setInt(1, parent_id);
-            resultSet = getAllCommentsStatement.executeQuery();
-          
-            while (resultSet.next()) {
-                Post post = new Post(
-                        resultSet.getInt("post_id"),
-                        resultSet.getTimestamp("created"),
-                        new User(resultSet.getInt("user_id")),
-                        resultSet.getString("content"),
-                        new Event(resultSet.getInt("event_id")),
-                        new Post(resultSet.getInt("parent_id"))
-                );
+        getAllCommentsStatement.setInt(1, parent_id);
+        resultSet = getAllCommentsStatement.executeQuery();
 
-                allComments.add(post); //Adding a post to all comments with a belonging parent_id
-            }
-            resultSet.close();
-            getAllCommentsStatement.close();
+        while (resultSet.next()) {
+            Post post = new Post(
+                    resultSet.getInt("post_id"),
+                    resultSet.getTimestamp("created"),
+                    new User(resultSet.getInt("user_id")),
+                    resultSet.getString("content"),
+                    new Event(resultSet.getInt("event_id")),
+                    new Post(resultSet.getInt("parent_id"))
+            );
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            allComments.add(post); //Adding a post to all comments with a belonging parent_id
+        }
+        resultSet.close();
+        getAllCommentsStatement.close();
 
-        } return allComments;
+        //Returning all comments belonging with a parent_id to a specific post
+        return allComments;
 
     }
 
     //Creating method for getting one post
-    public ArrayList<Post> getPostByUserId(int user_id) {
+    public ArrayList<Post> getPostByUserId(int user_id) throws SQLException {
         ArrayList<Post> posts = new ArrayList<Post>();
 
         ResultSet resultSet = null;
 
         //Creating prepared statement for getting one post
         PreparedStatement getOnePostStatement = null;
-        try {
-            getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE user_id = ?");
 
-            getOnePostStatement.setInt(1, user_id);
+        getOnePostStatement = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE user_id = ?");
 
-            resultSet = getOnePostStatement.executeQuery();
+        getOnePostStatement.setInt(1, user_id);
+
+        resultSet = getOnePostStatement.executeQuery();
 
 
-            while (resultSet.next()) {
-                Post post = new Post(
-                        resultSet.getInt("post_id"),
-                        resultSet.getTimestamp("created"),
-                        new User(resultSet.getInt("user_id")), //Creating an owner to the post
-                        resultSet.getString("content"),
-                        new Event(resultSet.getInt("event_id")), //Creating an event to the post
-                        new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
-                );
+        while (resultSet.next()) {
+            Post post = new Post(
+                    resultSet.getInt("post_id"),
+                    resultSet.getTimestamp("created"),
+                    new User(resultSet.getInt("user_id")), //Creating an owner to the post
+                    resultSet.getString("content"),
+                    new Event(resultSet.getInt("event_id")), //Creating an event to the post
+                    new Post(resultSet.getInt("parent_id")) //Creating an parent to the post
+            );
 
-                posts.add(post);
+            posts.add(post);
 
-            } //Closing query
-            resultSet.close();
-            getOnePostStatement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
 
-        } //Returning one post
+        //Closing query
+        resultSet.close();
+        getOnePostStatement.close();
+
+        //Returning one post
         return posts;
 
     }
 
-    public ArrayList<Post> getAllPostsByEventId(int event_id) {
+    //Creating method for getting all posts by an event_id
+    public ArrayList<Post> getAllPostsByEventId(int event_id) throws SQLException{
+
         ArrayList<Post> posts = new ArrayList<Post>();
+
         ResultSet resultSet = null;
 
+        //Creating an prepared statement for getting all posts by an event_id
         PreparedStatement getAllPostsByEventIdStmt = null;
 
-        try {
-            getAllPostsByEventIdStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE event_id = ?");
 
-            getAllPostsByEventIdStmt.setInt(1, event_id);
+        getAllPostsByEventIdStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE event_id = ?");
 
-            resultSet = getAllPostsByEventIdStmt.executeQuery();
+        getAllPostsByEventIdStmt.setInt(1, event_id);
 
-            while (resultSet.next()) {
-                Post post = new Post(
-                        resultSet.getInt("post_id"),
-                        resultSet.getTimestamp("created"),
-                        new User(resultSet.getInt("user_id")),
-                        resultSet.getString("content"),
-                        new Event(resultSet.getInt("event_id")),
-                        new Post(resultSet.getInt("parent_id"))
-                );
+        resultSet = getAllPostsByEventIdStmt.executeQuery();
 
-                posts.add(post);
-            }
-            resultSet.close();
-            getAllPostsByEventIdStmt.close();
+        while (resultSet.next()) {
+            Post post = new Post(
+                    resultSet.getInt("post_id"),
+                    resultSet.getTimestamp("created"),
+                    new User(resultSet.getInt("user_id")),
+                    resultSet.getString("content"),
+                    new Event(resultSet.getInt("event_id")),
+                    new Post(resultSet.getInt("parent_id"))
+            );
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            posts.add(post);
         }
+
+        resultSet.close();
+        getAllPostsByEventIdStmt.close();
+
         return posts;
     }
 

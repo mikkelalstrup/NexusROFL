@@ -37,7 +37,13 @@ public class UserEndpoint {
     @GET
     public Response getAllUsers() {
 
-        ArrayList<User> allUsers = userProvider.getAllUsers();
+        ArrayList<User> allUsers = null;
+        try {
+            allUsers = userProvider.getAllUsers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
@@ -48,6 +54,8 @@ public class UserEndpoint {
      * @param user_id
      * @return The method returns a response that converts the "user" from GSON to JSON.
      */
+
+    //@Secured
     @GET
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id){
@@ -56,24 +64,30 @@ public class UserEndpoint {
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
 
-        User user = userProvider.getUser(user_id);
+        User user;
 
-        //Adding all events and posts to a specific user
-        user.getEvents().addAll(eventProvider.getEventByUserId(user_id));
+        try {
+            user = userProvider.getUser(user_id);
 
-        user.getPosts().addAll(postProvider.getPostByUserId(user_id));
+            user.getEvents().addAll(eventProvider.getEventByUserId(user_id));
+
+            user.getPosts().addAll(postProvider.getPostByUserId(user_id));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
-  
-  
+
     /**
      * This method lets the client create a new user. The parameters catches the specific input from the client.
      * The Endpoint creates a User object using the parameters stated below.
      * The User object is validated in UserController to makes that it is fitted for the database
      * The Endpoint throws 3 different Reponses, Statuscode: 201 (Succesful user creation), 400 (Wrong input by client), 501 (Database Error).
      */
-
+    //@Secured
     @POST
     public Response createUser(String jsonUser) {
 
@@ -108,5 +122,30 @@ public class UserEndpoint {
         return Response.status(201).type("text/plain").entity("User Created").build();
         
         }
-    }
+
+        //@Secured
+        @DELETE
+        @Path("{id}")
+        public Response deleteUser(String jsonDeleteId){
+            User userToDelete;
+
+            try {
+
+                userToDelete = new Gson().fromJson(jsonDeleteId, User.class);
+                userProvider.getAllUsers();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return Response.status(400).build();
+            }
+
+
+
+            return Response.status(200).type("text/plain").entity("User was deleted").build();
+        }
+
+}
+
+
+
 

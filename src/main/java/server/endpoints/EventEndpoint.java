@@ -40,6 +40,10 @@ import java.util.Properties;
 @Path("/events")
 public class EventEndpoint {
 
+    EventProvider eventProvider = new EventProvider();
+    ContentController contentController = new ContentController();
+
+
     /*
     This method returns all events. To do so, the method creates an object of the EventProvider class
     and inserts this object in an ArrayList along with the user from the models package.
@@ -51,10 +55,21 @@ public class EventEndpoint {
 
         EventProvider eventProvider = new EventProvider();
 
-        ArrayList<Event> allEvents = eventProvider.getAllEvents();
+        ArrayList<Event> allEvents = null;
+        try {
+            allEvents = eventProvider.getAllEvents();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
+
+
 
         return Response.status(200).type("text/plain").entity(new Gson().toJson(allEvents)).build();
+
+
     }
+
 
     /** This method returns one event chosen by the specific id for the event. The method creates objects of the classes EventProvider,
      * PostProvider and UserController and inserts the object for the class EventProvider in the ArrayList "Event".
@@ -63,6 +78,8 @@ public class EventEndpoint {
      *
      * @return It returns a response that converts the ArrayList from GSON to JSON
      */
+
+    //@Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
@@ -70,14 +87,20 @@ public class EventEndpoint {
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
         UserController userController = new UserController();
+        Event event;
 
-        Event event = eventProvider.getEvent(event_id);
+        try {
+            event = eventProvider.getEvent(event_id);
 
-        //Getting all posts in the event
-        event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
+            event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
 
-        //Getting all participants in the event
-        event.getParticipants().addAll(userController.getParticipants(event_id));
+            //Get all participants in the event
+
+            event.getParticipants().addAll(userController.getParticipants(event_id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
@@ -105,12 +128,26 @@ public class EventEndpoint {
 
         //Creating try-catch method and if it fails to create an event, it throws and SQL exception
         try {
-            eventProvider.createEvent(event);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            /**
+             * validateEventInput is called to make sure the timestamp for event equals or is after current time.
+             * This way you can't create an event that happens before current time.
+             */
+
+            event = contentController.validateEventCreation(event.getId(), event.getTitle(),
+                    event.getCreated(), event.getOwner(), event.getStartDate(),
+                    event.getEndDate(),event.getDescription());
+        }catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            return Response.status(400).build();
         }
 
-        return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
+        try {
+            eventProvider.createEvent(event);
+        }catch (SQLException e){
+            return Response.status(501).type("text/plain").entity("Server could not store the validated event object (SQL Error) ").build();
+        }
+
+        return Response.status(201).type("text/plain").entity("Event Created").build();
 
 
     }
@@ -132,7 +169,12 @@ public class EventEndpoint {
         //Creates an object of the class EventProvider
         EventProvider eventProvider = new EventProvider();
 
-        eventProvider.subscribeToEvent(user_id, event_id);
+        try {
+            eventProvider.subscribeToEvent(user_id, event_id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("text/plain").entity("User subscribed to event").build();
 
