@@ -70,16 +70,17 @@ public class UserProvider {
         //Close query
         createUserStatement.close();
 
-        //Return User id
+        //Return user_id
         return user.getId();
 
     }
 
+    //Creating an method that returns a user by it's email
     public User getUserByEmail(String email){
         User user = null;
 
         ResultSet resultSet = null;
-
+        //Creating a prepared statement for getting user by email
         try {
             PreparedStatement getUserByEmailStmt = DBManager.getConnection().prepareStatement
                     ("SELECT * FROM users WHERE email = ?");
@@ -94,23 +95,21 @@ public class UserProvider {
                 );
 
             }
-
+            //If the user doesn't have a value an exception will be thrown
             if(user == null){
                 throw new IllegalArgumentException();
             }
-
+            //Closing query
             resultSet.close();
-
-          // getUserByEmailStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //Returns user by email
         return user;
     }
 
-    //PreparedStatetement for getting all users ordered by id from DB cafe_nexus
+    //PreparedStatement for getting all users ordered by id from DB cafe_nexus
     public ArrayList<User> getAllUsers() {
         ArrayList<User> allUsers = new ArrayList<>();
 
@@ -140,7 +139,7 @@ public class UserProvider {
                 allUsers.add(user);
             }
 
-
+            //Closing query
             resultSet.close();
 
             getAllUsersStmt.close();
@@ -150,13 +149,12 @@ public class UserProvider {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //Returns all users by it's id
         return allUsers;
     }
 
-    /*
-    Get user by user_id
-     */
+
+    //Creating method for getting a specific user by it's user_id
     public User getUser(int user_id){
         User user = null;
         EventProvider eventProvider = new EventProvider();
@@ -190,6 +188,7 @@ public class UserProvider {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+                //Return a user with it's user_id
             return user;
     }
 

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class PostProvider {
 
 
-    //PreparedStatement for getting all posts from posts.
+    // PreparedStatement for getting all posts from posts in DB cafe_nexus
     public ArrayList<Post> getAllPosts() {
         ArrayList<Post> allPosts = new ArrayList<>();
 
@@ -52,14 +52,14 @@ public class PostProvider {
 
                 allPosts.add(post);
 
-            }
+            } //Closing query
             resultSet.close();
             getAllPostsStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //Returning all posts
         return allPosts;
 
     }
@@ -114,7 +114,6 @@ public class PostProvider {
         return post.getId();
     }
 
-
     //Creating method for getting one post
     public Post getPost(int post_id) {
         Post post = null;
@@ -152,14 +151,14 @@ public class PostProvider {
     }
 
 
-    /**Creating a method that gets all comments from one post by cheching if the post has a parent_id
+    /**Creating a method that gets all comments from one post by checking if the post has a parent_id
      *
      * @param parent_id
      * @return The method returns an ArrayList that contains all the comments to one post
      */
     public ArrayList<Post> getPostsByParentId(int parent_id) {
 
-        // Creating an object of the Arraylist
+        // Creating an object of the Arraylist and creating a prepared statement for getting all comments
         ArrayList<Post> allComments = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -183,12 +182,14 @@ public class PostProvider {
 
                 allComments.add(post); //Adding a post to all comments with a belonging parent_id
             }
+            //Closing query
             resultSet.close();
             getAllCommentsStatement.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
 
+            //Returning all comments belonging with a parent_id to a specific post
         } return allComments;
 
     }
@@ -231,11 +232,13 @@ public class PostProvider {
         return posts;
 
     }
-
+    //Creating method for getting all posts by an event_id
     public ArrayList<Post> getAllPostsByEventId(int event_id) {
         ArrayList<Post> posts = new ArrayList<Post>();
+
         ResultSet resultSet = null;
 
+        //Creating an prepared statement for getting all posts by an event_id
         PreparedStatement getAllPostsByEventIdStmt = null;
 
         try {
@@ -257,12 +260,14 @@ public class PostProvider {
 
                 posts.add(post);
             }
+            //Closing query
             resultSet.close();
             getAllPostsByEventIdStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        //Returning all posts with a specific event_id
         return posts;
     }
 

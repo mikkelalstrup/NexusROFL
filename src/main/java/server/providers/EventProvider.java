@@ -29,7 +29,7 @@ import java.sql.Statement;
 public class EventProvider {
 
     /*
-    PreparedStatetement for getting all events ordered by id from DB cafe_nexus
+    PreparedStatement for getting all events ordered by id from DB cafe_nexus
      */
     public ArrayList<Event> getAllEvents() {
         ArrayList<Event> allEvents = new ArrayList<>();
@@ -54,7 +54,7 @@ public class EventProvider {
                         resultSet.getInt("event_id"),
                         resultSet.getString("title"),
                         resultSet.getTimestamp("created"),
-                        new User(resultSet.getInt("owner_id")),
+                        new User(resultSet.getInt("owner_id")),  //Creating an owner to the event
                         resultSet.getTimestamp("start"),
                         resultSet.getTimestamp("end"),
                         resultSet.getString("description"));
@@ -63,7 +63,7 @@ public class EventProvider {
 
 
             }
-
+            //Closing query
             resultSet.close();
 
             getAllEventsStmt.close();
@@ -74,12 +74,12 @@ public class EventProvider {
         {
             e.printStackTrace();
         }
-
+        //Return all events by id
         return allEvents;
 
     }
 
-    //method for getting a single event by event_id
+    //Method for getting a single event by event_id
     public Event getEvent(int event_id) {
         ArrayList<Event> getEvent = new ArrayList<>();
         Event event = null;
@@ -98,7 +98,7 @@ public class EventProvider {
                     resultSet.getInt("event_id"),
                     resultSet.getString("title"),
                     resultSet.getTimestamp("created"),
-                    new User(resultSet.getInt("owner_id")),
+                    new User(resultSet.getInt("owner_id")), //Creating an owner to the event
                     resultSet.getTimestamp("start"),
                     resultSet.getTimestamp("end"),
                     resultSet.getString("description"));
@@ -106,9 +106,11 @@ public class EventProvider {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        //Return one event by id
         return event;
     }
 
+    //Creating prepared statement for getting an event by a users id
     public ArrayList<Event> getEventByUserId(int user_id) {
         ArrayList<Event> events = new ArrayList<>();
         ResultSet resultSet = null;
@@ -120,6 +122,7 @@ public class EventProvider {
             getEventStmt.setInt(1, user_id);
 
             resultSet = getEventStmt.executeQuery();
+
 
             while (resultSet.next()) {
                 Event event = new Event(
@@ -135,6 +138,7 @@ public class EventProvider {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        //Return an event belonging to an user by id
         return events;
     }
 
@@ -156,7 +160,7 @@ public class EventProvider {
 
     }
 
-
+    //Creating a method for subscribe to an event by user_id
     public void subscribeToEvent(int user_id, int event_id) {
 
         try {
@@ -172,7 +176,7 @@ public class EventProvider {
         }
 
     }
-
+    //Method for getting participants to events by id
     public ArrayList<Integer> getParticipantIdsByEventId(int event_id) {
 
         ResultSet resultSet = null;
@@ -189,6 +193,7 @@ public class EventProvider {
                 user_ids.add(resultSet.getInt("user_id"));
             }
 
+            //Closing query
             resultSet.close();
             getParticipantIdByEventId.close();
 
@@ -196,6 +201,7 @@ public class EventProvider {
             e.printStackTrace();
         }
 
+        //Return participants by id
         return user_ids;
     }
 
