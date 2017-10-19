@@ -20,7 +20,7 @@ public class DBManager {
     // Establishes the conncetion to the database
 
     static {
-        log.writeLog("DB","DBManager","WORKS",2);
+        log.writeLog("DB",DBManager.class,"WORKS",2);
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
