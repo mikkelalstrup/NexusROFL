@@ -175,8 +175,6 @@ public class UserProvider {
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
                         resultSet.getString("email"),
-                        resultSet.getString("password"),
-                        resultSet.getString("salt"),
                         resultSet.getString("description"),
                         resultSet.getString("gender").charAt(0),
                         resultSet.getString("major"),
