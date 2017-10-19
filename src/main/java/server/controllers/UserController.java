@@ -95,7 +95,13 @@ public class UserController {
         }
     }
 
+    /**
+     * This method is used to get all specific participants for an specific event. 
+     * @param event_id
+     * @return
+     */
     public ArrayList<User> getParticipants(int event_id) throws SQLException{
+
 
         EventProvider eventProvider = new EventProvider();
         UserProvider userProvider = new UserProvider();
