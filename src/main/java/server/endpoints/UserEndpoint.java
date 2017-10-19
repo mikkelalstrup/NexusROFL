@@ -36,7 +36,13 @@ public class UserEndpoint {
     @GET
     public Response getAllUsers() {
 
-        ArrayList<User> allUsers = userProvider.getAllUsers();
+        ArrayList<User> allUsers = null;
+        try {
+            allUsers = userProvider.getAllUsers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
@@ -49,17 +55,23 @@ public class UserEndpoint {
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
 
-        User user = userProvider.getUser(user_id);
+        User user;
 
+        try {
+            user = userProvider.getUser(user_id);
 
-        user.getEvents().addAll(eventProvider.getEventByUserId(user_id));
+            user.getEvents().addAll(eventProvider.getEventByUserId(user_id));
 
-        user.getPosts().addAll(postProvider.getPostByUserId(user_id));
+            user.getPosts().addAll(postProvider.getPostByUserId(user_id));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
-  
-  
+
     /**
      * This method lets the client create a new user. The parameters catches the specific input from the client.
      * The Endpoint creates a User object using the parameters stated below.

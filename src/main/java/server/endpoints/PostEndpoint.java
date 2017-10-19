@@ -42,7 +42,13 @@ public class PostEndpoint {
     public Response getAllPosts() {
 
         PostProvider postProvider = new PostProvider();
-        ArrayList<Post> allPosts = postProvider.getAllPosts();
+        ArrayList<Post> allPosts = null;
+        try {
+            allPosts = postProvider.getAllPosts();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
         return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
     }
 
@@ -109,7 +115,8 @@ public class PostEndpoint {
             return Response.status(400).type("text/plain").entity("Could not create post").build();
         }
 
-        return Response.status(201).type("text/plain").entity("Post Created").build();
+        return Response.status(201).type("text/plain").entity("Post created").build();
+
 
     }
 
@@ -124,10 +131,17 @@ public class PostEndpoint {
     @Path("{id}")
     public Response getPost(@PathParam("id") int post_id) {
         PostProvider postProvider = new PostProvider(); //Creates an object
+        Post post;
 
-        Post post = postProvider.getPost(post_id);
+        try {
+            post = postProvider.getPost(post_id);
 
-        post.getComments().addAll(postProvider.getPostsByParentId(post_id));
+            post.getComments().addAll(postProvider.getPostsByParentId(post_id));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
 
