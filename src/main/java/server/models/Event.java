@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
+ * This class defines the variables of the event.
+ *
  * Created by Filip on 10-10-2017.
  */
 public class Event {
