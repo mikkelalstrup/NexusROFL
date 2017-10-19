@@ -63,6 +63,7 @@ public class EventEndpoint {
 
     }
 
+    //@Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){

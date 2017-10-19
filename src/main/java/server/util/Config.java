@@ -23,6 +23,8 @@ public final class Config {
     private static String DATABASE_USER;
     private static String DATABASE_PASSWORD;
 
+    private static String JWT_SECRET;
+
     public Config() throws IOException {
 
         JsonObject jsonConfig = new JsonObject();
@@ -51,6 +53,8 @@ public final class Config {
         DATABASE_USER = jsonConfig.get("DATABASE_USER").getAsString();
         DATABASE_PASSWORD = jsonConfig.get("DATABASE_PASSWORD").getAsString();
 
+        JWT_SECRET = jsonConfig.get("JWT_SECRET").getAsString();
+
         reader.close();
         input.close();
 
@@ -75,4 +79,6 @@ public final class Config {
     public static String getDatabasePassword() {
         return DATABASE_PASSWORD;
     }
+
+    public static String getJwtSecret() { return JWT_SECRET; }
 }

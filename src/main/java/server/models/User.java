@@ -104,6 +104,13 @@ public class User {
         this.posts = new ArrayList<Post>();
     }
 
+    public User(int id, String email, String salt, String password) {
+        this.id = id;
+        this.email = email;
+        this.salt = salt;
+        this.password = password;
+    }
+
 
     //Setters
     public void setId(int id) {
