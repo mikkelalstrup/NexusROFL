@@ -31,7 +31,7 @@ public class PostProvider {
 
         PreparedStatement getAllPostsStmt = null;
         try {
-            getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts");
+            getAllPostsStmt = DBManager.getConnection().prepareStatement("SELECT * FROM posts WHERE parent_id is null ");
 
             resultSet = getAllPostsStmt.executeQuery();
 
