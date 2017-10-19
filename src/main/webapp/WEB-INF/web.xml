@@ -2,7 +2,7 @@
  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
-<web-app>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
   <display-name>Archetype Created Web Application</display-name>
   <servlet>
     <servlet-name>Jersey Web Application</servlet-name>
@@ -13,6 +13,11 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+
+  <listener>
+    <listener-class>server.util.ServletContext</listener-class>
+  </listener>
+
   <servlet-mapping>
     <servlet-name>Jersey Web Application</servlet-name>
     <url-pattern>/api/*</url-pattern>
