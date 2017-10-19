@@ -46,4 +46,15 @@ public class DBManager {
         return connection;
     }
 
+    /**
+     * Closes the connection to the database
+     */
+    public static void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
