@@ -17,17 +17,8 @@ public class RootEndpoint {
     @GET
     public Response defaultGetMethod(){
 
-        User user = new User("Password", "Filip", "Andersen", "fian16ab@student.cbs.dk", "MY password is password", 'M', "Ha(it)", 3);
 
-        UserProvider userProvider = new UserProvider();
-
-        try {
-            userProvider.createUser(user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return Response.status(200).type("text/plain").entity("User created").build();
+        return Response.status(200).type("text/plain").entity("Welcome to our API").build();
 
     }
 }
