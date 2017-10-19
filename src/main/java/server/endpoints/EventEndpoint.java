@@ -52,7 +52,13 @@ public class EventEndpoint {
 
         EventProvider eventProvider = new EventProvider();
 
-        ArrayList<Event> allEvents = eventProvider.getAllEvents();
+        ArrayList<Event> allEvents = null;
+        try {
+            allEvents = eventProvider.getAllEvents();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("text/plain").entity(new Gson().toJson(allEvents)).build();
     }
@@ -63,13 +69,20 @@ public class EventEndpoint {
         EventProvider eventProvider = new EventProvider();
         PostProvider postProvider = new PostProvider();
         UserController userController = new UserController();
+        Event event;
 
-        Event event = eventProvider.getEvent(event_id);
+        try {
+            event = eventProvider.getEvent(event_id);
 
-        event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
+            event.getPosts().addAll(postProvider.getAllPostsByEventId(event_id));
 
-        //Get all participants in the event
-        event.getParticipants().addAll(userController.getParticipants(event_id));
+            //Get all participants in the event
+
+            event.getParticipants().addAll(userController.getParticipants(event_id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
@@ -94,6 +107,7 @@ public class EventEndpoint {
             eventProvider.createEvent(event);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Response.status(500).build();
         }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
@@ -111,7 +125,12 @@ public class EventEndpoint {
 
         EventProvider eventProvider = new EventProvider();
 
-        eventProvider.subscribeToEvent(user_id, event_id);
+        try {
+            eventProvider.subscribeToEvent(user_id, event_id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("text/plain").entity("User subscribed to event").build();
 
