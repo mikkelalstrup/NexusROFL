@@ -14,10 +14,13 @@ public class DBManager {
 
     // Holds the connection to the database
     private static Connection connection;
+    private static Log log = new Log();
+
 
     // Establishes the conncetion to the database
     static {
         try {
+            log.writeLog("DB",this.getClass(),"WORKS",2);
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(
                     "jdbc:mysql://"
@@ -43,6 +46,7 @@ public class DBManager {
      * @return Returns a Connection object, that can be used to make queries to the database
      */
     public static Connection getConnection() {
+
         return connection;
     }
 
