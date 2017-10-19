@@ -32,12 +32,11 @@ import java.util.ArrayList;
 public class PostEndpoint {
     ContentController contentController = new ContentController();
 
-    /*
-    This method returns all posts. To do so, the method creates an object of the PostProvider class
-    and inserts this object in an arraylist along with the post from the models-package.
-
-    Return response converts the arraylist getAllPosts from GSON to JSON.
-     */
+    /**
+     * This method returns all posts. To do so, the method creates an object of the PostProvider class
+     * and inserts this object in an ArrayList along with the post from the models package.
+     * The method returns a response that converts the ArrayList "getAllPosts" from GSON to JSON.
+     **/
     @GET
     public Response getAllPosts() {
 
@@ -46,6 +45,11 @@ public class PostEndpoint {
         return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
     }
 
+    /** This method lets the client create a new post
+     *
+     * @param jsonPost
+     * @return
+     */
 
     @POST
     public Response createPostMethod (String jsonPost) {
@@ -84,9 +88,10 @@ public class PostEndpoint {
             localEvent = 0;
         }
 
-
+        //Creates an object of the model class Post
         Post createdPost = new Post(localOwner, localContent, localEvent, localParent);
 
+        //Creates an object of the class PostProvider
         PostProvider postProvider = new PostProvider();
 
         try {
@@ -103,15 +108,16 @@ public class PostEndpoint {
 
 
     /** This method returns one specific post chosen by id. The method creates an object of the PostProvider class and inserts
-     * this object in an ArrayList and also the variables from the Post model-package.
+     * this object in an ArrayList and also the variables from the Post model package.
      *
-     *
-     * @return It returns an response that converts the ArrayList onePost from Gson to Json.
+     * @return It returns a response that converts the ArrayList "onePost" from GSON to JSON.
      */
     @GET
     @Path("{id}")
     public Response getPost(@PathParam("id") int post_id) {
-        PostProvider postProvider = new PostProvider(); //Creates an object
+
+        //Creating an object of the class PostProvider
+        PostProvider postProvider = new PostProvider();
 
         Post post = postProvider.getPost(post_id);
 
