@@ -24,12 +24,16 @@ import java.sql.Statement;
 
 
 /**
- * Created by Filip on 10-10-2017.
+ * The purpose of this class is to communicate and making requests to the tables events and
+ * events_has_users in the DB cafe_nexus. This class contains prepared statements and communicates
+ * with the Event-class in the package models for getting the variables for an event
+ *
+ *
  */
 public class EventProvider {
 
     /*
-    PreparedStatetement for getting all events ordered by id from DB cafe_nexus
+    PreparedStatement for getting all events ordered by id from DB cafe_nexus
      */
     public ArrayList<Event> getAllEvents() throws SQLException {
         ArrayList<Event> allEvents = new ArrayList<>();
@@ -62,16 +66,20 @@ public class EventProvider {
 
 
         }
-
+      
+        //Return all events by id
         resultSet.close();
         getAllEventsStmt.close();
+
 
         return allEvents;
 
     }
 
+
     //method for getting a single event by event_id
     public Event getEvent(int event_id) throws SQLException {
+
         ArrayList<Event> getEvent = new ArrayList<>();
         Event event = null;
         ResultSet resultSet = null;
@@ -113,13 +121,13 @@ public class EventProvider {
                     resultSet.getInt("event_id"),
                     resultSet.getString("title"),
                     resultSet.getTimestamp("created"),
-                    new User(resultSet.getInt("owner_id")),
+                    new User(resultSet.getInt("owner_id")), //Creating an owner to the event
                     resultSet.getTimestamp("start"),
                     resultSet.getTimestamp("end"),
                     resultSet.getString("description"));
             events.add(event);
         }
-
+      
         return events;
     }
 
@@ -141,8 +149,9 @@ public class EventProvider {
 
     }
 
-
+    //Creating a method for subscribe to an event by user_id
     public void subscribeToEvent(int user_id, int event_id) throws SQLException{
+
 
         PreparedStatement subscribeToEventStmt = DBManager.getConnection()
                 .prepareStatement("INSERT INTO events_has_users (user_id, event_id) VALUES (?,?)");
@@ -153,6 +162,7 @@ public class EventProvider {
 
     }
 
+    //Method for getting participants to events by id
     public ArrayList<Integer> getParticipantIdsByEventId(int event_id) throws SQLException {
 
         ResultSet resultSet = null;
@@ -164,6 +174,8 @@ public class EventProvider {
 
         resultSet = getParticipantIdByEventId.executeQuery();
 
+
+        //Return participants by id
         while(resultSet.next()) {
             user_ids.add(resultSet.getInt("user_id"));
         }

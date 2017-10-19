@@ -18,13 +18,19 @@ import java.util.ArrayList;
 
 
 /**
- * Created by Filip on 10-10-2017.
+ *  The purpose of this class is to communicate and making requests to the tables posts
+ *  in the DB cafe_nexus. This class contains prepared statements and communicates
+ *  with the Post-class in the package models for getting the variables for a post.
+ *  A post can both be an event and a comment. Notice a parent_id
+ *
+ *
+ *
  */
 public class PostProvider {
 
-
-    //PreparedStatement for getting all posts from posts.
+    // PreparedStatement for getting all posts from posts in DB cafe_nexus
     public ArrayList<Post> getAllPosts() throws SQLException{
+
         ArrayList<Post> allPosts = new ArrayList<>();
 
         ResultSet resultSet = null;
@@ -53,7 +59,7 @@ public class PostProvider {
 
                 allPosts.add(post);
 
-            }
+            } //Closing query
             resultSet.close();
             getAllPostsStmt.close();
 
@@ -61,10 +67,10 @@ public class PostProvider {
             e.printStackTrace();
 
         }
+
+        //Returning all posts
         resultSet.close();
         getAllPostsStmt.close();
-
-
 
         return allPosts;
 
@@ -120,7 +126,6 @@ public class PostProvider {
         return post.getId();
     }
 
-
     //Creating method for getting one post
     public Post getPost(int post_id) throws SQLException{
         Post post = null;
@@ -158,14 +163,14 @@ public class PostProvider {
     }
 
 
-    /**Creating a method that gets all comments from one post by cheching if the post has a parent_id
+    /**Creating a method that gets all comments from one post by checking if the post has a parent_id
      *
      * @param parent_id
      * @return The method returns an ArrayList that contains all the comments to one post
      */
     public ArrayList<Post> getPostsByParentId(int parent_id) throws SQLException {
 
-        // Creating an object of the Arraylist
+        // Creating an object of the Arraylist and creating a prepared statement for getting all comments
         ArrayList<Post> allComments = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -191,6 +196,7 @@ public class PostProvider {
         resultSet.close();
         getAllCommentsStatement.close();
 
+        //Returning all comments belonging with a parent_id to a specific post
         return allComments;
 
     }
@@ -234,10 +240,14 @@ public class PostProvider {
 
     }
 
+    //Creating method for getting all posts by an event_id
     public ArrayList<Post> getAllPostsByEventId(int event_id) throws SQLException{
+
         ArrayList<Post> posts = new ArrayList<Post>();
+
         ResultSet resultSet = null;
 
+        //Creating an prepared statement for getting all posts by an event_id
         PreparedStatement getAllPostsByEventIdStmt = null;
 
 
