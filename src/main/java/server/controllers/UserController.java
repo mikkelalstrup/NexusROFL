@@ -94,6 +94,12 @@ public class UserController {
         }
     }
 
+    /**
+     * This method is used to get all specific participants for an specific event. 
+     * @param event_id
+     * @return
+     */
+
     public ArrayList<User> getParticipants(int event_id){
 
         EventProvider eventProvider = new EventProvider();
