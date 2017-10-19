@@ -58,8 +58,8 @@ public class EventProvider {
                     resultSet.getString("title"),
                     resultSet.getTimestamp("created"),
                     new User(resultSet.getInt("owner_id")),
-                    resultSet.getTimestamp("start"),
-                    resultSet.getTimestamp("end"),
+                    resultSet.getTimestamp("beginning"),
+                    resultSet.getTimestamp("ending"),
                     resultSet.getString("description"));
 
             allEvents.add(event);
@@ -97,8 +97,8 @@ public class EventProvider {
                 resultSet.getString("title"),
                 resultSet.getTimestamp("created"),
                 new User(resultSet.getInt("owner_id")),
-                resultSet.getTimestamp("start"),
-                resultSet.getTimestamp("end"),
+                resultSet.getTimestamp("beginning"),
+                resultSet.getTimestamp("ending"),
                 resultSet.getString("description"));
         }
 
@@ -122,8 +122,8 @@ public class EventProvider {
                     resultSet.getString("title"),
                     resultSet.getTimestamp("created"),
                     new User(resultSet.getInt("owner_id")), //Creating an owner to the event
-                    resultSet.getTimestamp("start"),
-                    resultSet.getTimestamp("end"),
+                    resultSet.getTimestamp("beginning"),
+                    resultSet.getTimestamp("ending"),
                     resultSet.getString("description"));
             events.add(event);
         }
@@ -136,7 +136,7 @@ public class EventProvider {
     public void createEvent(Event event) throws SQLException {
 
         PreparedStatement createEventStmt = DBManager.getConnection().
-                prepareStatement("INSERT INTO events (title, description, start, events.end, owner_id) VALUES (?,?,?,?,?)",
+                prepareStatement("INSERT INTO events (title, description, beginning, ending, owner_id) VALUES (?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
 
         createEventStmt.setString(1, event.getTitle());
