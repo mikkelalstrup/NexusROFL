@@ -12,11 +12,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Created by Filip on 10-10-2017.
+ *
+ *  The purpose of this class is to communicate and making requests to the tables users
+ *  in the DB cafe_nexus. This class contains prepared statements and communicates
+ *  with the User-class in the package models for getting the variables for a user
+ *
  */
 public class UserProvider {
 
     /**
+     *
      * Creates a new user in the database, requires a User object without a salt, and a plaintext password
      *
      * @param user The user that should be created in the database,

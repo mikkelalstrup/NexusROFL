@@ -18,7 +18,13 @@ import java.util.ArrayList;
 
 
 /**
- * Created by Filip on 10-10-2017.
+ *  The purpose of this class is to communicate and making requests to the tables posts
+ *  in the DB cafe_nexus. This class contains prepared statements and communicates
+ *  with the Post-class in the package models for getting the variables for a post.
+ *  A post can both be an event and a comment. Notice a parent_id
+ *
+ *
+ *
  */
 public class PostProvider {
 

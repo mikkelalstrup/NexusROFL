@@ -24,7 +24,11 @@ import java.sql.Statement;
 
 
 /**
- * Created by Filip on 10-10-2017.
+ * The purpose of this class is to communicate and making requests to the tables events and
+ * events_has_users in the DB cafe_nexus. This class contains prepared statements and communicates
+ * with the Event-class in the package models for getting the variables for an event
+ *
+ *
  */
 public class EventProvider {
 
