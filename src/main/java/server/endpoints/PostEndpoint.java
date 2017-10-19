@@ -15,6 +15,7 @@ import server.controllers.ContentController;
 
 import server.models.Post;
 import server.providers.PostProvider;
+import server.util.Log;
 
 
 import javax.ws.rs.*;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 @Path("/posts")
 public class PostEndpoint {
     ContentController contentController = new ContentController();
+    private static Log log = new Log();
 
     /*
     This method returns all posts. To do so, the method creates an object of the PostProvider class
@@ -40,6 +42,8 @@ public class PostEndpoint {
      */
     @GET
     public Response getAllPosts() {
+
+        log.writeLog("DB", this.getClass(), "WORKS", 2);
 
         PostProvider postProvider = new PostProvider();
         ArrayList<Post> allPosts = null;

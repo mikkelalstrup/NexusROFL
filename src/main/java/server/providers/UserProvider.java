@@ -95,7 +95,7 @@ public class UserProvider {
 
             }
 
-        }
+
 
         if(user == null){
             throw new IllegalArgumentException();
