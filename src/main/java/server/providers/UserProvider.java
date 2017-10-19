@@ -88,6 +88,7 @@ public class UserProvider {
             resultSet = getUserByEmailStmt.executeQuery();
             while(resultSet.next()){
                 user = new User(
+                        resultSet.getInt("user_id"),
                         resultSet.getString("email"),
                         resultSet.getString("salt"),
                         resultSet.getString("password")

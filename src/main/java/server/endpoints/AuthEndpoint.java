@@ -44,10 +44,12 @@ public class AuthEndpoint {
       if (checkHashed.equals(foundUser.getPassword())) {
         try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
-            Date expDate = new Date(System.currentTimeMillis()*1001);
+            long timevalue;
+            timevalue = (System.currentTimeMillis()*1000)+20000205238L;
+            Date expDate = new Date(timevalue);
 
-
-            token = JWT.create().withSubject(foundUser.getEmail()).withClaim("id",foundUser.getId()).withExpiresAt(expDate).withIssuer("ROFL").sign(algorithm);
+            token = JWT.create().withClaim("email",foundUser.getEmail()).withKeyId(String.valueOf(foundUser.getId()))
+                    .withExpiresAt(expDate).withIssuer("ROFL").sign(algorithm);
            // tokenArray.add(token);
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();

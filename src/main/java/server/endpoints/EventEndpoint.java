@@ -57,7 +57,7 @@ public class EventEndpoint {
         return Response.status(200).type("text/plain").entity(new Gson().toJson(allEvents)).build();
     }
 
-    @Secured
+    //@Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
