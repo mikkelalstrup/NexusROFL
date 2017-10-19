@@ -32,23 +32,33 @@ import java.util.ArrayList;
 public class PostEndpoint {
     ContentController contentController = new ContentController();
 
-    /*
-    This method returns all posts. To do so, the method creates an object of the PostProvider class
-    and inserts this object in an arraylist along with the post from the models-package.
-
-    Return response converts the arraylist getAllPosts from GSON to JSON.
-     */
+    /**
+     * This method returns all posts. To do so, the method creates an object of the PostProvider class
+     * and inserts this object in an ArrayList along with the post from the models package.
+     * The method returns a response that converts the ArrayList "getAllPosts" from GSON to JSON.
+     **/
     @GET
     public Response getAllPosts() {
 
         PostProvider postProvider = new PostProvider();
-        ArrayList<Post> allPosts = postProvider.getAllPosts();
+        ArrayList<Post> allPosts = null;
+        try {
+            allPosts = postProvider.getAllPosts();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
         return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
     }
 
+    /** This method lets the client create a new post
+     *
+     * @param jsonPost
+     * @return
+     */
 
     @POST
-    public Response createPostMethod (String jsonPost) {
+    public Response createPost (String jsonPost) {
 
         JsonObject postData = new Gson().fromJson(jsonPost, JsonObject.class);
 
@@ -84,38 +94,60 @@ public class PostEndpoint {
             localEvent = 0;
         }
 
-
+        //Creates an object of the model class Post
         Post createdPost = new Post(localOwner, localContent, localEvent, localParent);
 
+        //Creates an object of the class PostProvider
         PostProvider postProvider = new PostProvider();
+
+        /**
+         * ValidatePostInput is called to make sure, that the post content is not empty.
+         */
+        try{
+            createdPost = contentController.validatePostCreation(createdPost.getId(), createdPost.getCreated(),
+                    createdPost.getOwner(), createdPost.getContent(),
+                    createdPost.getEvent(),createdPost.getParent());
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+            return Response.status(400).build();
+        }
 
         try {
            postProvider.createPost(createdPost);
-            return Response.status(201).type("text/plain").entity("Post created").build();
         }
         catch (SQLException e){
-            System.out.println("TESTATA");
             e.printStackTrace();
             return Response.status(400).type("text/plain").entity("Could not create post").build();
         }
+
+        return Response.status(201).type("text/plain").entity("Post created").build();
+
 
     }
 
 
     /** This method returns one specific post chosen by id. The method creates an object of the PostProvider class and inserts
-     * this object in an ArrayList and also the variables from the Post model-package.
+     * this object in an ArrayList and also the variables from the Post model package.
      *
-     *
-     * @return It returns an response that converts the ArrayList onePost from Gson to Json.
+     * @return It returns a response that converts the ArrayList "onePost" from GSON to JSON.
      */
     @GET
     @Path("{id}")
     public Response getPost(@PathParam("id") int post_id) {
+
         PostProvider postProvider = new PostProvider(); //Creates an object
+        Post post;
 
-        Post post = postProvider.getPost(post_id);
+        try {
+            post = postProvider.getPost(post_id);
 
-        post.getComments().addAll(postProvider.getPostsByParentId(post_id));
+
+            post.getComments().addAll(postProvider.getPostsByParentId(post_id));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(500).build();
+        }
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
 
