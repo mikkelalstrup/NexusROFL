@@ -1,8 +1,6 @@
 package server.endpoints;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.sun.org.apache.regexp.internal.RE;
 import server.controllers.UserController;
 import server.models.Event;
 import server.providers.EventProvider;
@@ -41,8 +39,7 @@ import java.util.Properties;
 
 @Path("/events")
 public class EventEndpoint {
-    EventProvider eventProvider = new EventProvider();
-    ContentController contentController = new ContentController();
+
 
     /*
     This method returns all events. To do so, the method creates an object of the EventProvider-class
@@ -53,8 +50,7 @@ public class EventEndpoint {
     @GET
     public Response getAllEvents(){
 
-
-
+        EventProvider eventProvider = new EventProvider();
 
         ArrayList<Event> allEvents = eventProvider.getAllEvents();
 
@@ -95,27 +91,12 @@ public class EventEndpoint {
         EventProvider eventProvider = new EventProvider();
 
         try {
-            /**
-             * validateEventInput is called to make sure the timestamp for event equals or is after current time.
-             * This way you can't create an event that happens before current time.
-             */
-
-            event = contentController.validateEventCreation(event.getId(), event.getTitle(),
-                    event.getCreated(), event.getOwner(), event.getStartDate(),
-                    event.getEndDate(),event.getDescription());
-        }catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
-            return Response.status(400).build();
-        }
-
-        try {
             eventProvider.createEvent(event);
-
-        }catch (SQLException e){
-            return Response.status(501).type("text/plain").entity("Server could not store the validated event object (SQL Error) ").build();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        return Response.status(201).type("text/plain").entity("Event Created").build();
+        return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
 
     }
@@ -134,6 +115,7 @@ public class EventEndpoint {
 
         return Response.status(200).type("text/plain").entity("User subscribed to event").build();
 
-    }
+            }
+
 
 }
