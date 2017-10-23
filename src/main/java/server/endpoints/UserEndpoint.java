@@ -117,8 +117,8 @@ public class UserEndpoint {
             createdUser = new Gson().fromJson(jsonUser, User.class);
         } catch (IllegalArgumentException e) {
 
-            log.writeLog("DB",this.getClass(),"An IllegalArguement exception occurred while running createUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+            log.writeLog("DB",this.getClass(),("An IllegalArguement exception occurred while running createUser"
+                    + "User active was: " + userEmail + "\n"),1);
 
             System.out.print(e.getMessage());
             return Response.status(400).build();
@@ -145,15 +145,14 @@ public class UserEndpoint {
             userProvider.createUser(createdUser);
         } catch (SQLException e) {
 
-            log.writeLog("DB",this.getClass(),"A SQL exception occurred while running createUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + userEmail),1);
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running createUser"
+                    + "User active was: " + userEmail + "\n"),1);
 
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
 
-        log.writeLog("DB",this.getClass(),"createUser was successful",0);
-        log.writeLog("DB",this.getClass(),("User active was: " + userEmail),0);
+        log.writeLog("DB",this.getClass(),("createUser was successful - " + "User active was: " + userEmail),0);
 
         return Response.status(201).type("text/plain").entity("User Created").build();
         
