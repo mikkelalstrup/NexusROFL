@@ -31,8 +31,6 @@ public class UserEndpoint {
 //    AuthenticationFilter authenticationFilter = new AuthenticationFilter();
     Log log = new Log();
 
-    String userEmail = "Test@Test.com";
-
     /*
     This method returns all users. To do so, the method creates an object of the UserProvider class
     and inserts this object in an ArrayList along with the user from the models package.
@@ -119,8 +117,8 @@ public class UserEndpoint {
             createdUser = new Gson().fromJson(jsonUser, User.class);
         } catch (IllegalArgumentException e) {
 
-            log.writeLog("DB",this.getClass(),"An IllegalArguement exception occurred while running createUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),1);
+            log.writeLog("DB",this.getClass(),("An IllegalArguement exception occurred while running createUser" +
+                    "User active was: " + AuthenticationFilter.userEmailByToken + "\n"),1);
 
             System.out.print(e.getMessage());
             return Response.status(400).build();
@@ -147,22 +145,24 @@ public class UserEndpoint {
             userProvider.createUser(createdUser);
         } catch (SQLException e) {
 
-            log.writeLog("DB",this.getClass(),"A SQL exception occurred while running createUser",1);
-            log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),1);
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running createUser"
+                    + "User active was: " + AuthenticationFilter.userEmailByToken + "\n"),1);
 
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
 
-        log.writeLog("DB",this.getClass(),"createUser was successful",0);
+
+        log.writeLog("DB",this.getClass(),("createUser was successful" + "User active was: " +
+                AuthenticationFilter.userEmailByToken + "\n"),0);
         log.writeLog("DB",this.getClass(),("User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(201).type("text/plain").entity("User Created").build();
         
         }
 
-        public void SetTemporaryEmailByToken (String emailInToken){
-            this.userEmail = emailInToken;
+   //     public void SetTemporaryEmailByToken (String emailInToken){
+   //         this.userEmail = emailInToken;
     }
 /*
         //@Secured
@@ -191,7 +191,7 @@ public class UserEndpoint {
             return Response.status(200).type("text/plain").entity("User was deleted").build();
         }
         */
-}
+
 
 
 
