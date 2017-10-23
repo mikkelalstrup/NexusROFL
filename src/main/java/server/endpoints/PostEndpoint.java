@@ -15,6 +15,7 @@ import server.controllers.ContentController;
 
 import server.models.Post;
 import server.providers.PostProvider;
+import server.util.Log;
 
 
 import javax.ws.rs.*;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 @Path("/posts")
 public class PostEndpoint {
     ContentController contentController = new ContentController();
+    Log log = new Log();
 
     /**
      * This method returns all posts. To do so, the method creates an object of the PostProvider class
@@ -46,9 +48,17 @@ public class PostEndpoint {
         try {
             allPosts = postProvider.getAllPosts();
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running getAllPosts - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        log.writeLog(this.getClass().getName(),this.getClass(),("getAllPosts was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
+
         return Response.status(200).type("application/json").entity(new Gson().toJson(allPosts)).build();
     }
 
@@ -76,6 +86,10 @@ public class PostEndpoint {
             localEvent = postData.get("event").getAsInt();
         }
         catch (NullPointerException e){
+
+            log.writeLog("DB",this.getClass(),("A NullPointer exception occurred while running createPost - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             localEvent = 0;
 
         }
@@ -84,6 +98,10 @@ public class PostEndpoint {
             localParent = postData.get("parent").getAsInt();
         }
         catch (NullPointerException e2){
+
+            log.writeLog("DB",this.getClass(),("A NullPointer exception occurred while running createPost - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             localParent = 0;
         }
 
@@ -109,6 +127,10 @@ public class PostEndpoint {
                     createdPost.getOwner(), createdPost.getContent(),
                     createdPost.getEvent(),createdPost.getParent());
         } catch (IllegalArgumentException exception) {
+
+            log.writeLog("DB",this.getClass(),("An IllegalArguement exception occurred while running createPost - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             System.out.println(exception.getMessage());
             return Response.status(400).build();
         }
@@ -118,8 +140,15 @@ public class PostEndpoint {
         }
         catch (SQLException e){
             e.printStackTrace();
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running createPost - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             return Response.status(400).type("text/plain").entity("Could not create post").build();
         }
+
+        log.writeLog(this.getClass().getName(),this.getClass(),("createPost was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(201).type("text/plain").entity("Post created").build();
 
@@ -148,8 +177,15 @@ public class PostEndpoint {
 
         } catch (SQLException e) {
             e.printStackTrace();
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running getPost - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             return Response.status(500).build();
         }
+
+        log.writeLog(this.getClass().getName(),this.getClass(),("getPost was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(post)).build();
 
