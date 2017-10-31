@@ -38,7 +38,9 @@ public class UserController {
      */
 
     public User validateUserCreation(String password, String firstName, String lastName,
-                                     String email, char gender, String description, String major, int semester) throws IllegalArgumentException{
+                                     String email, char gender, String description, String major, int semester) throws IllegalArgumentException, SQLException {
+
+        UserProvider userProvider = new UserProvider();
 
         /**
          * A user object is created, which is needed to validate the different parameters.
@@ -76,6 +78,8 @@ public class UserController {
             } else if (semester <1 || semester >6) {
                 System.out.print("semester fejl");
                 throw new IllegalArgumentException("Semester must be a value of 1-6");
+            } else if (userProvider.getUserByEmail(validatedUser.getEmail()) != null) {
+                throw new IllegalArgumentException("Email already exists");
             }
 
         /**

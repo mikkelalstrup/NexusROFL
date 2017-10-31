@@ -135,6 +135,9 @@ public class UserEndpoint {
 
             System.out.println(exception.getMessage());
             return Response.status(400).build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(400).build();
         }
         try {
             userProvider.createUser(createdUser);
@@ -158,7 +161,7 @@ public class UserEndpoint {
     //     public void SetTemporaryEmailByToken (String emailInToken){
     //         this.userEmail = emailInToken;
 
-    
+
     @DELETE
     @Path("{id}")
     public Response deleteUser(String jsonDeleteId) {
