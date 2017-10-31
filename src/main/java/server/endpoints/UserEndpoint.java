@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 import server.controllers.UserController;
+import server.util.Log;
 
 
 import java.sql.SQLException;
@@ -27,6 +28,8 @@ public class UserEndpoint {
     //Creates object of the two classes UserProvider and UserController
     UserProvider userProvider = new UserProvider();
     UserController userController = new UserController();
+    //    AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+    Log log = new Log();
 
     /*
     This method returns all users. To do so, the method creates an object of the UserProvider class
@@ -34,6 +37,7 @@ public class UserEndpoint {
 
     Return response converts the ArrayList "allUsers" from GSON to JSON
      */
+    @Secured
     @GET
     public Response getAllUsers() {
 
@@ -41,24 +45,32 @@ public class UserEndpoint {
         try {
             allUsers = userProvider.getAllUsers();
         } catch (SQLException e) {
+
+            log.writeLog("DB", this.getClass(), ("An SQL exception occurred while running getAllUsers - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken), 1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        log.writeLog(this.getClass().getName(), this.getClass(), ("getAllUsers was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken), 0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(allUsers)).build();
 
     }
 
-    /** This method returns one user by the users specific id.
+    /**
+     * This method returns one user by the users specific id.
      *
      * @param user_id
      * @return The method returns a response that converts the "user" from GSON to JSON.
      */
 
-    //@Secured
+    @Secured
     @GET
     @Path("{id}")
-    public Response getUser(@PathParam("id") int user_id){
+    public Response getUser(@PathParam("id") int user_id) {
 
         //Creates objects of the classes EventProvider and PostProvider
         EventProvider eventProvider = new EventProvider();
@@ -74,9 +86,16 @@ public class UserEndpoint {
             user.getPosts().addAll(postProvider.getPostByUserId(user_id));
 
         } catch (SQLException e) {
+
+            log.writeLog("DB", this.getClass(), ("An SQL exception occurred while running getUser - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken), 1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        log.writeLog(this.getClass().getName(), this.getClass(), ("getUser was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken), 0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(user)).build();
     }
@@ -87,7 +106,7 @@ public class UserEndpoint {
      * The User object is validated in UserController to makes that it is fitted for the database
      * The Endpoint throws 3 different Reponses, Statuscode: 201 (Succesful user creation), 400 (Wrong input by client), 501 (Database Error).
      */
-    //@Secured
+    @Secured
     @POST
     public Response createUser(String jsonUser) {
 
@@ -95,6 +114,10 @@ public class UserEndpoint {
         try {
             createdUser = new Gson().fromJson(jsonUser, User.class);
         } catch (IllegalArgumentException e) {
+
+            log.writeLog("DB", this.getClass(), ("An IllegalArguement exception occurred while running createUser - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken + "\n"), 1);
+
             System.out.print(e.getMessage());
             return Response.status(400).build();
         }
@@ -109,42 +132,63 @@ public class UserEndpoint {
                     createdUser.getLastName(), createdUser.getEmail(), createdUser.getGender(),
                     createdUser.getDescription(), createdUser.getMajor(), createdUser.getSemester());
         } catch (IllegalArgumentException exception) {
+
+            log.writeLog("DB", this.getClass(), ("An IllegalArguement exception occurred while running createUser"
+                    + "User active was: " + AuthenticationFilter.userEmailByToken + "\n"), 1);
+
             System.out.println(exception.getMessage());
             return Response.status(400).build();
         }
         try {
             userProvider.createUser(createdUser);
         } catch (SQLException e) {
+
+            log.writeLog("DB", this.getClass(), ("An SQL exception occurred while running createUser"
+                    + "User active was: " + AuthenticationFilter.userEmailByToken + "\n"), 1);
+
             return Response.status(501).type("text/plain").entity("Server couldn't store the validated user object (SQL Error)").build();
 
         }
 
+
+        log.writeLog("DB", this.getClass(), ("createUser was successful - " + "User active was: " +
+                AuthenticationFilter.userEmailByToken + "\n"), 0);
+
         return Response.status(201).type("text/plain").entity("User Created").build();
-        
+
+    }
+
+    //     public void SetTemporaryEmailByToken (String emailInToken){
+    //         this.userEmail = emailInToken;
+
+
+    //@Secured
+    @DELETE
+    @Path("{id}")
+    public Response deleteUser(String jsonDeleteId) {
+        User userToDelete;
+
+        try {
+
+            userToDelete = new Gson().fromJson(jsonDeleteId, User.class);
+            userProvider.getAllUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running deleteUser - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
+            return Response.status(400).build();
         }
 
-        //@Secured
-        @DELETE
-        @Path("{id}")
-        public Response deleteUser(String jsonDeleteId){
-            User userToDelete;
+        log.writeLog(this.getClass().getName(),this.getClass(),("deleteUser was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
-            try {
-
-                userToDelete = new Gson().fromJson(jsonDeleteId, User.class);
-                userProvider.getAllUsers();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                return Response.status(400).build();
-            }
-
-
-
-            return Response.status(200).type("text/plain").entity("User was deleted").build();
-        }
-
+        return Response.status(200).type("text/plain").entity("User was deleted").build();
+    }
 }
+
+
 
 
 

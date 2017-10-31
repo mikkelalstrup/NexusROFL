@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import server.models.Event;
 import server.providers.EventProvider;
 import server.providers.PostProvider;
+import server.util.Log;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -42,7 +43,7 @@ public class EventEndpoint {
 
     EventProvider eventProvider = new EventProvider();
     ContentController contentController = new ContentController();
-
+    Log log = new Log();
 
     /*
     This method returns all events. To do so, the method creates an object of the EventProvider class
@@ -50,6 +51,7 @@ public class EventEndpoint {
 
     The method return response status codes and converts the ArrayList "allEvents" from GSON to JSON
      */
+    @Secured
     @GET
     public Response getAllEvents(){
 
@@ -59,11 +61,16 @@ public class EventEndpoint {
         try {
             allEvents = eventProvider.getAllEvents();
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running getAllEvents - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
 
-
+        log.writeLog(this.getClass().getName(),this.getClass(),("getAllEvents was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(200).type("text/plain").entity(new Gson().toJson(allEvents)).build();
 
@@ -79,7 +86,7 @@ public class EventEndpoint {
      * @return It returns a response that converts the ArrayList from GSON to JSON
      */
 
-    //@Secured
+    @Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
@@ -98,9 +105,16 @@ public class EventEndpoint {
 
             event.getParticipants().addAll(userController.getParticipants(event_id));
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running getEvent - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        log.writeLog(this.getClass().getName(),this.getClass(),("getEvent was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(200).type("application/json").entity(new Gson().toJson(event)).build();
 
@@ -111,6 +125,7 @@ public class EventEndpoint {
      * @param eventJson
      * @return It returns a response with a status code 200.
      */
+    @Secured
     @POST
     public Response createEvent(String eventJson) {
 
@@ -137,6 +152,10 @@ public class EventEndpoint {
                     event.getCreated(), event.getOwner(), event.getStartDate(),
                     event.getEndDate(),event.getDescription());
         }catch (IllegalArgumentException exception) {
+
+            log.writeLog("DB",this.getClass(),("An IllegalArguement exception occurred while running createEvent - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             System.out.println(exception.getMessage());
             return Response.status(400).build();
         }
@@ -144,8 +163,15 @@ public class EventEndpoint {
         try {
             eventProvider.createEvent(event);
         }catch (SQLException e){
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running createEvent - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             return Response.status(501).type("text/plain").entity("Server could not store the validated event object (SQL Error) ").build();
         }
+
+        log.writeLog(this.getClass().getName(),this.getClass(),("createEvent was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(201).type("text/plain").entity("Event Created").build();
 
@@ -158,6 +184,7 @@ public class EventEndpoint {
      * @param jsonData
      * @return It returns a response with a status code 200.
      */
+    @Secured
     @POST
     @Path("/subscribe")
     public Response subscribeToEvent(String jsonData){
@@ -172,9 +199,16 @@ public class EventEndpoint {
         try {
             eventProvider.subscribeToEvent(user_id, event_id);
         } catch (SQLException e) {
+
+            log.writeLog("DB",this.getClass(),("An SQL exception occurred while running subscribeToEvent - " +
+                    "User active was: " + AuthenticationFilter.userEmailByToken),1);
+
             e.printStackTrace();
             return Response.status(500).build();
         }
+
+        log.writeLog(this.getClass().getName(),this.getClass(),("subscribeToEvent was successful - " +
+                "User active was: " + AuthenticationFilter.userEmailByToken),0);
 
         return Response.status(200).type("text/plain").entity("User subscribed to event").build();
 

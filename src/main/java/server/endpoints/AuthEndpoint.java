@@ -8,6 +8,7 @@ import server.models.User;
 import server.providers.UserProvider;
 import server.util.Auth;
 import server.util.Config;
+import server.util.Log;
 
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -31,7 +32,7 @@ public class AuthEndpoint {
 
    UserProvider userProvider = new UserProvider();
    User foundUser = new User();
-
+   Log log = new Log();
    String checkHashed;
 
     /** This method authorizes an user by e-mail and password. To protect the users password, this method employ salted password hashing.
@@ -49,6 +50,10 @@ public class AuthEndpoint {
        try {
            foundUser = userProvider.getUserByEmail(authUser.getEmail());
        } catch (Exception e) {
+
+           log.writeLog("DB",this.getClass(),("An exception occurred while running AuthUser - " +
+                   "User active was: " + authUser.getEmail()),1);
+
            return Response.status(401).type("plain/text").entity("User not authorized").build();
        }
       checkHashed = Auth.hashPassword(authUser.getPassword(), foundUser.getSalt());
@@ -65,15 +70,30 @@ public class AuthEndpoint {
                     .withExpiresAt(expDate).withIssuer("ROFL").sign(algorithm);
            // tokenArray.add(token);
         }catch (UnsupportedEncodingException e){
+
+            log.writeLog("DB",this.getClass(),("An UnsupportedEncoding occurred while running AuthUser - " +
+                    "User active was: " + authUser.getEmail()),1);
+
             e.printStackTrace();
         }catch (JWTCreationException e){
+
+            log.writeLog("DB",this.getClass(),("A JWTCreation exception occurred while running AuthUser - " +
+                    "User active was: " + authUser.getEmail()),1);
+
             e.printStackTrace();
         }
-        
+
+          log.writeLog(this.getClass().getName(),this.getClass(),("AuthUser was successful and user was authorized - " +
+                  "User active was: " + authUser.getEmail()),0);
+
           return Response.status(200).type("plain/text").entity(token).build();
       } else {
+
+          log.writeLog(this.getClass().getName(),this.getClass(),("AuthUser was successful but user not authorized - " +
+                  "User active was: " + authUser.getEmail()),0);
+
           return Response.status(401).type("plain/text").entity("User not authorized").build();
-      }
+   }
    }
 
    }
