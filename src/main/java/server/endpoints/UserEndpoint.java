@@ -37,7 +37,6 @@ public class UserEndpoint {
 
     Return response converts the ArrayList "allUsers" from GSON to JSON
      */
-    @Secured
     @GET
     public Response getAllUsers() {
 
@@ -67,7 +66,6 @@ public class UserEndpoint {
      * @return The method returns a response that converts the "user" from GSON to JSON.
      */
 
-    @Secured
     @GET
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id) {
@@ -106,7 +104,6 @@ public class UserEndpoint {
      * The User object is validated in UserController to makes that it is fitted for the database
      * The Endpoint throws 3 different Reponses, Statuscode: 201 (Succesful user creation), 400 (Wrong input by client), 501 (Database Error).
      */
-    @Secured
     @POST
     public Response createUser(String jsonUser) {
 
@@ -161,8 +158,7 @@ public class UserEndpoint {
     //     public void SetTemporaryEmailByToken (String emailInToken){
     //         this.userEmail = emailInToken;
 
-
-    //@Secured
+    
     @DELETE
     @Path("{id}")
     public Response deleteUser(String jsonDeleteId) {

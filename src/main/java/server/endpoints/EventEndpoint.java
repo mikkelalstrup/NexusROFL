@@ -51,7 +51,6 @@ public class EventEndpoint {
 
     The method return response status codes and converts the ArrayList "allEvents" from GSON to JSON
      */
-    @Secured
     @GET
     public Response getAllEvents(){
 
@@ -85,8 +84,6 @@ public class EventEndpoint {
      *
      * @return It returns a response that converts the ArrayList from GSON to JSON
      */
-
-    @Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){
@@ -125,7 +122,6 @@ public class EventEndpoint {
      * @param eventJson
      * @return It returns a response with a status code 200.
      */
-    @Secured
     @POST
     public Response createEvent(String eventJson) {
 
@@ -184,7 +180,6 @@ public class EventEndpoint {
      * @param jsonData
      * @return It returns a response with a status code 200.
      */
-    @Secured
     @POST
     @Path("/subscribe")
     public Response subscribeToEvent(String jsonData){
