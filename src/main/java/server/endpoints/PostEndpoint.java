@@ -39,6 +39,7 @@ public class PostEndpoint {
      * and inserts this object in an ArrayList along with the post from the models package.
      * The method returns a response that converts the ArrayList "getAllPosts" from GSON to JSON.
      **/
+    @Secured
     @GET
     public Response getAllPosts() {
 
@@ -66,6 +67,7 @@ public class PostEndpoint {
      * @param jsonPost
      * @return
      */
+    @Secured
     @POST
     public Response createPost (String jsonPost) {
 
@@ -159,6 +161,7 @@ public class PostEndpoint {
      *
      * @return It returns a response that converts the ArrayList "onePost" from GSON to JSON.
      */
+    @Secured
     @GET
     @Path("{id}")
     public Response getPost(@PathParam("id") int post_id) {

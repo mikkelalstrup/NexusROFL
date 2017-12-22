@@ -37,6 +37,7 @@ public class UserEndpoint {
 
     Return response converts the ArrayList "allUsers" from GSON to JSON
      */
+    @Secured
     @GET
     public Response getAllUsers() {
 
@@ -65,7 +66,7 @@ public class UserEndpoint {
      * @param user_id
      * @return The method returns a response that converts the "user" from GSON to JSON.
      */
-
+    @Secured
     @GET
     @Path("{id}")
     public Response getUser(@PathParam("id") int user_id) {

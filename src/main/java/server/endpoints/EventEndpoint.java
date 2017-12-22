@@ -51,6 +51,7 @@ public class EventEndpoint {
 
     The method return response status codes and converts the ArrayList "allEvents" from GSON to JSON
      */
+    @Secured
     @GET
     public Response getAllEvents(){
 
@@ -84,6 +85,7 @@ public class EventEndpoint {
      *
      * @return It returns a response that converts the ArrayList from GSON to JSON
      */
+    @Secured
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int event_id){

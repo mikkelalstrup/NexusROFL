@@ -66,7 +66,7 @@ public class AuthEndpoint {
             timevalue = (System.currentTimeMillis()*1000)+20000205238L;
             Date expDate = new Date(timevalue);
 
-            token = JWT.create().withClaim("email",foundUser.getEmail()).withKeyId(String.valueOf(foundUser.getId()))
+            token = JWT.create().withClaim("email",foundUser.getEmail()).withClaim("id", foundUser.getId()).withKeyId(String.valueOf(foundUser.getId()))
                     .withExpiresAt(expDate).withIssuer("ROFL").sign(algorithm);
            // tokenArray.add(token);
         }catch (UnsupportedEncodingException e){
